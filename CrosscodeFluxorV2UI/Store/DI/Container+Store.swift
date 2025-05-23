@@ -1,5 +1,6 @@
 import Fluxor
 import Factory
+import CrosscodeDataLibrary
 
 public extension Container {
     internal var store: Factory<Store<AppState, AppEnvironment>> {
@@ -9,7 +10,7 @@ public extension Container {
     }
     
     internal func createStore() -> Store<AppState, AppEnvironment> {
-        let store = Store(initialState: AppState(), environment: AppEnvironment(layoutsAPI: TmpLayoutsService()))
+        let store = Store(initialState: AppState(), environment: AppEnvironment(layoutsAPI: LayoutsAPIImpl()))
         store.register(reducer: layoutsReducer, for: \.layouts)
 //        store.register(reducer: appReducer)
 //        store.register(effects: AppEffects(store: store) )

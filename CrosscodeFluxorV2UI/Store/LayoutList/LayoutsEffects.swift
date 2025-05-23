@@ -2,6 +2,8 @@ import Combine
 import Fluxor
 import Foundation
 import Factory
+import CrosscodeDataLibrary
+
 
 
 class LayoutsEffects: Effects {
@@ -53,7 +55,7 @@ class LayoutsEffects: Effects {
                     Task {
                         do {
 //                            let levels = try await environment.layoutAPI.addNewLayout()
-                            let layouts:[Layout] = []
+                            let layouts:[LevelLayout] = []
                             promise(.success(LayoutsActions.didCreateNewLayout(payload: layouts)))
                         } catch {
                             promise(.success(LayoutsActions.didFailFetchingLayouts(payload: error.localizedDescription)))
@@ -78,7 +80,7 @@ class LayoutsEffects: Effects {
                     Task {
                         do {
 //                            let levels = try await environment.layoutAPI.fetchAllLayouts()
-                            let layouts:[Layout] = []
+                            let layouts:[LevelLayout] = []
                             promise(.success(LayoutsActions.didFetchLayouts(payload: layouts)))
                         } catch {
                             promise(.success(LayoutsActions.didFailFetchingLayouts(payload: error.localizedDescription)))
@@ -102,7 +104,7 @@ class LayoutsEffects: Effects {
                         do {
                             // 1. Attempt deletion in service layer
 //                            let levels = try await environment.layoutAPI.deleteLayout(id: layoutID)
-                            let layouts:[Layout] = []
+                            let layouts:[LevelLayout] = []
                             // 2. On success, confirm deletion
                             promise(.success(LayoutsActions.didDeleteLayout(payload: layouts)))
 //                            promise(.success(LayoutsActions.fetchLayouts()))

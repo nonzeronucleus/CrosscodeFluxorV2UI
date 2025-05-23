@@ -4,7 +4,7 @@ import Factory
 import Fluxor
 import FluxorTestSupport
 @testable import CrosscodeFluxorV2UI
-//import CrosscodeDataLibrary
+import CrosscodeDataLibrary
 
 
 
@@ -56,7 +56,10 @@ struct LayoutsEffectsTests {
 
 
 class MockLayoutsService: LayoutsAPI {
-    let test = "MockLayoutsService"
+    func test() -> String {
+        "MockLayoutsService"
+    }
+    
     var calledFunctions: [String] = []
     
     init() {
@@ -71,22 +74,22 @@ class MockLayoutsService: LayoutsAPI {
         }
     }
     
-    func addNewLayout() async throws -> [Layout] {
+    func addNewLayout() async throws -> [LevelLayout] {
         calledFunctions.append(#function)
         return []
     }
     
-    func fetchAllLayouts() async throws -> [Layout] {
+    func fetchAllLayouts() async throws -> [LevelLayout] {
         calledFunctions.append(#function)
         return []
     }
     
-    func deleteLayout(id: UUID) async throws -> [Layout] {
+    func deleteLayout(id: UUID) async throws -> [LevelLayout] {
         calledFunctions.append(#function)
         return []
     }
     
-    func saveLevel(level: Layout) async throws {
+    func saveLevel(level: LevelLayout) async throws {
         calledFunctions.append(#function)
     }
     

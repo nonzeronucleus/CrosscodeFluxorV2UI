@@ -1,5 +1,7 @@
 import SwiftUI
 import Fluxor
+import CrosscodeDataLibrary
+
 
 struct LayoutsListView: View {
     @EnvironmentObject var store: Store<AppState, AppEnvironment>
@@ -76,7 +78,7 @@ struct LayoutEditView: View {
 //
 struct LevelsList: View {
     let store: Store<AppState, AppEnvironment>
-    let layouts: [Layout]
+    let layouts: [LevelLayout]
     
     var body: some View {
         List {

@@ -1,5 +1,5 @@
 import Foundation
-//import CrosscodeDataLibrary
+import CrosscodeDataLibrary
 
 enum PopulationState: Encodable {
     case unpopulated
@@ -15,7 +15,7 @@ enum SaveState: Encodable {
 
 
 struct LevelEditState : Encodable, Equatable {
-    var level: Layout
+    var level: LevelLayout
     var savingLevelID: UUID? = nil // Id of current level being saved, if any
     var selectedCell: UUID? = nil
     var checking: Bool = false
