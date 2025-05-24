@@ -18,7 +18,7 @@ struct CrosscodeFluxorV2UIApp: App {
 
     var body: some Scene {
         WindowGroup {
-            LayoutsListView()
+            RootView()
                 .environmentObject(store)
         }
     }

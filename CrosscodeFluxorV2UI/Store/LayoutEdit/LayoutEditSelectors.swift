@@ -3,7 +3,7 @@ import Fluxor
 import CrosscodeDataLibrary
 
 
-enum LevelEditSelectors {
+enum LayoutEditSelectors {
     static let level = Selector<AppState, LevelLayout?>(projector: { (state) in
         guard let levelEdit = state.levelEdit else { return nil }
         return levelEdit.level

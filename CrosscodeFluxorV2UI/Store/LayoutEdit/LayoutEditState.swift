@@ -14,7 +14,7 @@ enum SaveState: Encodable {
 }
 
 
-struct LevelEditState : Encodable, Equatable {
+struct LayoutEditState : Encodable, Equatable {
     var level: LevelLayout
     var savingLevelID: UUID? = nil // Id of current level being saved, if any
     var selectedCell: UUID? = nil

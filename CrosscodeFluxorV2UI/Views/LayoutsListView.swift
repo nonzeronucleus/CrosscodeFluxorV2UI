@@ -6,15 +6,11 @@ import CrosscodeDataLibrary
 struct LayoutsListView: View {
     @EnvironmentObject var store: Store<AppState, AppEnvironment>
     @AppSelector(LayoutSelectors.layouts) private var layouts
-    
+    @AppSelector(NavigationSelectors.currentRoute) var currentRoute
     @State private var navigationPath: [UUID] = []
     @State private var showDeleteAlert = false
     @State private var layoutToDelete: UUID?
     
-    private var currentRoute: Route? {
-        store.state.navigation.route
-    }
-
     var body: some View {
         NavigationStack(path: $navigationPath) {
             LevelsList(store:store, layouts:layouts)
@@ -60,21 +56,7 @@ struct LayoutsListView: View {
     }
     
     private func addNewLayout() {
-//        let newID = UUID()
         store.dispatch(action: LayoutsActions.createNewLayout())
-//        store.dispatch(action: NavigationActions.Navigate(route: .layoutDetail(id: newID)))
-    }
-}
-
-
-struct LayoutEditView: View {
-    
-    init(layoutID:UUID) {
-        
-    }
-    
-    var body: some View {
-        Text("LayoutEditView")
     }
 }
 
@@ -91,8 +73,7 @@ struct LevelsList: View {
                 }
                 .simultaneousGesture(
                     TapGesture().onEnded {
-//                        store.dispatch(action: LevelEditActions.selectLevel(payload: layout))
-//                        store.dispatch(action: NavigationActions.navigate(payload: .layoutDetail(id: layout.id)))
+                        store.dispatch(action: LayoutEditActions.selectLevel(payload: layout))
                     }
                 )
                 .swipeActions(edge: .trailing) {

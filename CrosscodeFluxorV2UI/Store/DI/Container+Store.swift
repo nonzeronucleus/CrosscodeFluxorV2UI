@@ -11,8 +11,15 @@ public extension Container {
     
     internal func createStore() -> Store<AppState, AppEnvironment> {
         let store = Store(initialState: AppState(), environment: AppEnvironment(layoutsAPI: LayoutsAPIImpl()))
+        store.register(reducer: appReducer)
+        store.register(effects: AppEffects())
+        
         store.register(reducer: layoutsReducer, for: \.layouts)
         store.register(effects: LayoutsEffects())
+        
+        store.register(reducer: navigationReducer, for: \.navigation)
+        
+        
 //        store.register(reducer: appReducer)
 //        store.register(effects: AppEffects(store: store) )
         

@@ -3,7 +3,7 @@ import Fluxor
 
 
 
-let levelEditReducer = Reducer<LevelEditState?>(
+let layoutEditReducer = Reducer<LayoutEditState?>(
 //    ReduceOn(LevelEditActions.selectCell) { state, action in
 //        if state == nil { return }
 //        

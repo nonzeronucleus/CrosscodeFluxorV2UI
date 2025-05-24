@@ -74,12 +74,13 @@ struct LayoutsEffectsTests {
         // When
         store.dispatch(action: LayoutsActions.createNewLayout())
         
+        try await Task.sleep(for: .seconds(0.2))
+        
+        // Then
         let expectedActions = [
             LayoutsActions.createNewLayout(),
             LayoutsActions.didCreateNewLayout(payload: [layoutToAdd])
         ] as [any Action]
-        
-        try await Task.sleep(for: .seconds(0.2))
         
         #expect(store.dispatchedActions.count == expectedActions.count)
         #expect(compareActions(store.dispatchedActions, expectedActions))

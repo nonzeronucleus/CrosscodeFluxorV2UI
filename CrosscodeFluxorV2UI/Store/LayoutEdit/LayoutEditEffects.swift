@@ -3,7 +3,7 @@ import Fluxor
 import Foundation
 //import CrosscodeDataLibrary
 
-class LevelEditEffects: Effects {
+class LayoutEditEffects: Effects {
     typealias Environment = AppEnvironment
     
 //    let populateLevel = Effect<Environment>.dispatchingMultiple { actions, environment in

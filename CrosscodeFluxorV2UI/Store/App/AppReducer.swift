@@ -1,7 +1,7 @@
 import Fluxor
 
 let appReducer = Reducer<AppState>(
-//    ReduceOn(LevelEditActions.selectLevel) { state, action in
-//        state.levelEdit = LevelEditState(level: action.payload)
-//    }
+    ReduceOn(LayoutEditActions.selectLevel) { state, action in
+        state.levelEdit = LayoutEditState(level: action.payload)
+    }
 )
