@@ -1,72 +1,92 @@
-//
-//  CompareActions.swift
-//  CrosscodeFluxorV2UI
-//
-//  Created by Ian Plumb on 23/05/2025.
-//
-
-
-import Fluxor
+import Foundation
 import Testing
+import Fluxor
 
+// MARK: - Base Action Protocol
+
+//protocol Action {}
+
+// Optional: Add an identifier for matching across types
+protocol IdentifiableAction: Action {
+    var id: String { get }
+}
+
+// Optional: Used to get payloads for comparison
+protocol HasPayload {
+    var payload: Any { get }
+}
+
+// MARK: - Action Comparison Logic
+
+/// Compares arrays of Actions
 func compareActions(
     _ actual: [Action],
     _ expected: [Action],
     file: StaticString = #file,
     line: UInt = #line
 ) -> Bool {
-    if actual.count != expected.count {
-//        Issue.record(
-//            "Actual count \(actual.count) does not match expected count \(expected.count) in \(file), line \(line)"
-//        )
+    guard actual.count == expected.count else {
+//        Issue.record("Action count mismatch. Actual: \(actual.count), Expected: \(expected.count)", file: file, line: line)
         return false
     }
-    
+
     for (actualAction, expectedAction) in zip(actual, expected) {
         if !compareAction(actualAction, expectedAction, file: file, line: line) {
             return false
         }
     }
+
     return true
 }
 
+/// Compares two Actions by ID and Payload
 func compareAction(
-    _ actual: any Action,
-    _ expected: any Action,
+    _ actual: Action,
+    _ expected: Action,
     file: StaticString = #file,
     line: UInt = #line
 ) -> Bool {
-    guard let actual = actual as? IdentifiableAction else {return false}
-    guard let expected = expected as? IdentifiableAction else {return false}
-    
-    if actual.id != expected.id {
-        Issue.record(
-            "Actual id \(actual.id) did not nmatch expected \(expected.id)"
-        )
-    }
-    
-    
-    let actualPayload = getPropertyValue(of: actual, propertyName: "payload") as? String
-    let expectedPayload = getPropertyValue(of: actual, propertyName: "payload") as? String
+    let actualType = type(of: actual)
+    let expectedType = type(of: expected)
 
-    if actualPayload != expectedPayload {
+    guard actualType == expectedType else {
+//        Issue.record("Type mismatch: \(actualType) vs \(expectedType)", file: file, line: line)
         return false
-//        Issue.record(
-//            "Actual payload \(String(describing: actualPayload)) did not nmatch expected \(String(describing: expectedPayload))"
-//        )
     }
+
+    if let a = actual as? IdentifiableAction, let e = expected as? IdentifiableAction {
+        if a.id != e.id {
+//            Issue.record("ID mismatch: \(a.id) vs \(e.id)", file: file, line: line)
+            return false
+        }
+    }
+
+    let actualPayload = getPropertyValue(of: actual, propertyName: "payload")
+    let expectedPayload = getPropertyValue(of: expected, propertyName: "payload")
+
+    if "\(String(describing: actualPayload))" != "\(String(describing: expectedPayload))"  {
+//        Issue.record("Payload mismatch: \(actualPayload ?? "nil") vs \(expectedPayload ?? "nil")", file: file, line: line)
+        return false
+    }
+
     return true
 }
 
 
-func getPropertyValue(of object: Any, propertyName: String) -> Any? {
+func getPropertyValue<T>(of object: T, propertyName: String) -> Any? {
     let mirror = Mirror(reflecting: object)
-    
     for child in mirror.children {
         if let label = child.label, label == propertyName {
             return child.value
         }
     }
-    
-    return nil
+    return nil // Property not found
+}
+
+/// Safely gets a string description of an Action's payload
+func getPayloadDescription(action: Any) -> String? {
+    guard let hasPayload = action as? HasPayload else {
+        return nil
+    }
+    return String(describing: hasPayload.payload)
 }

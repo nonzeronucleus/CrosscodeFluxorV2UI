@@ -13,12 +13,13 @@ struct LayoutsEffectsTests {
         
     }
     
+    func setup() -> (MockStore<LayoutsState, AppEnvironment>, MockLayoutsService) {
+        let _ = Container.shared.uuid
+            .register { IncrementingUUIDProvider() }
+            .singleton
 
-    @Test
-    func testImportFlow() async throws {
-        
-        // Given
         let mockAPI = MockLayoutsService()
+        
         let environment = AppEnvironment(layoutsAPI: mockAPI)
         let store = MockStore(
             initialState: LayoutsState(),
@@ -26,10 +27,18 @@ struct LayoutsEffectsTests {
             reducers: [layoutsReducer]
         )
         
-        
         store.register(reducer: layoutsReducer)
         
         store.register(effects: LayoutsEffects() )
+        
+        return (store, mockAPI)
+    }
+    
+    
+    @Test
+    func testImportFlow() async throws {
+        // Given
+        let (store, mockAPI) = self.setup()
         
         // When
         store.dispatch(action: LayoutsActions.importLayouts())
@@ -46,72 +55,40 @@ struct LayoutsEffectsTests {
         
         #expect(store.dispatchedActions.count == expectedActions.count)
         #expect(compareActions(store.dispatchedActions, expectedActions))
+        
+        // Make sure all APIs have been called
+        #expect(mockAPI.calledFunctions.count == 2)
         #expect(mockAPI.calledFunctions.contains("importLayouts()"))
+        #expect(mockAPI.calledFunctions.contains("fetchAllLayouts()"))
+    }
+        
+
+    @Test
+    func testCreateNewLayout() async throws {
+        @Injected(\.uuid) var uuid
+        // Given
+        let (store, mockAPI) = self.setup()
+        let layoutToAdd = LevelLayout(id: uuid(), number: 1, gridText: "..|..|")
+        mockAPI.layoutToAdd = layoutToAdd
+        
+        // When
+        store.dispatch(action: LayoutsActions.createNewLayout())
+        
+        let expectedActions = [
+            LayoutsActions.createNewLayout(),
+            LayoutsActions.didCreateNewLayout(payload: [layoutToAdd])
+        ] as [any Action]
+        
+        try await Task.sleep(for: .seconds(0.2))
+        
+        #expect(store.dispatchedActions.count == expectedActions.count)
+        #expect(compareActions(store.dispatchedActions, expectedActions))
+        
         #expect(mockAPI.calledFunctions.count == 1)
-    }
-        
-        
-
-}
-
-
-class MockLayoutsService: LayoutsAPI {
-    func test() -> String {
-        "MockLayoutsService"
-    }
-    
-    var calledFunctions: [String] = []
-    
-    init() {
-        
-    }
-    
-    func importLayouts() async throws {
-        calledFunctions.append(#function)
-        importCalled = true
-        if shouldThrow {
-            throw MockError.importFailed
-        }
-    }
-    
-    func addNewLayout() async throws -> [LevelLayout] {
-        calledFunctions.append(#function)
-        return []
-    }
-    
-    func fetchAllLayouts() async throws -> [LevelLayout] {
-        calledFunctions.append(#function)
-        return []
-    }
-    
-    func deleteLayout(id: UUID) async throws -> [LevelLayout] {
-        calledFunctions.append(#function)
-        return []
-    }
-    
-    func saveLevel(level: LevelLayout) async throws {
-        calledFunctions.append(#function)
-    }
-    
-    func populateCrossword(crosswordLayout: String) async throws -> (String, String) {
-        calledFunctions.append(#function)
-        return (crosswordLayout, "")
-    }
-    
-    func depopulateCrossword(crosswordLayout: String) async throws -> (String, String) {
-        calledFunctions.append(#function)
-        return (crosswordLayout, "")
-    }
-    
-    func cancel() async {
-        calledFunctions.append(#function)
-    }
-    
-    var importCalled = false
-    var shouldThrow = false
-    
-    enum MockError: Error {
-        case importFailed
+        #expect(mockAPI.calledFunctions.contains("addNewLayout()"))
     }
 }
+
+
+
 

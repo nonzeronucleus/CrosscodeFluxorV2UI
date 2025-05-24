@@ -4,8 +4,6 @@ import Foundation
 import Factory
 import CrosscodeDataLibrary
 
-
-
 class LayoutsEffects: Effects {
     typealias Environment = AppEnvironment
     
@@ -16,10 +14,7 @@ class LayoutsEffects: Effects {
                 Future<Action, Never> { promise in
                     Task {
                         do {
-//                            @Injected(\.layoutsAPI) var layoutsService
-
                             try await environment.layoutsAPI.importLayouts()
-//                            try await environment.layoutsService.importLayouts()
                             promise(.success(LayoutsActions.didImportLayouts()))
                         } catch {
                             promise(.success(LayoutsActions.didFailImportingLayouts(payload: error.localizedDescription)))
@@ -54,8 +49,7 @@ class LayoutsEffects: Effects {
                 Future<Action, Never> { promise in
                     Task {
                         do {
-//                            let levels = try await environment.layoutAPI.addNewLayout()
-                            let layouts:[LevelLayout] = []
+                            let layouts = try await environment.layoutsAPI.addNewLayout()
                             promise(.success(LayoutsActions.didCreateNewLayout(payload: layouts)))
                         } catch {
                             promise(.success(LayoutsActions.didFailFetchingLayouts(payload: error.localizedDescription)))
@@ -69,8 +63,6 @@ class LayoutsEffects: Effects {
 
 
     let fetchLayouts = Effect<Environment>.dispatchingOne { actions, environment in
-//        actions
-//            .wasCreated(from: [LayoutsActions.fetchLayouts])
         Publishers.Merge(
             actions.wasCreated(from: LayoutsActions.fetchLayouts),
             actions.wasCreated(from: NavigationActions.dismiss)
@@ -79,8 +71,7 @@ class LayoutsEffects: Effects {
                 Future<Action, Never> { promise in
                     Task {
                         do {
-//                            let levels = try await environment.layoutAPI.fetchAllLayouts()
-                            let layouts:[LevelLayout] = []
+                            let layouts = try await environment.layoutsAPI.fetchAllLayouts()
                             promise(.success(LayoutsActions.didFetchLayouts(payload: layouts)))
                         } catch {
                             promise(.success(LayoutsActions.didFailFetchingLayouts(payload: error.localizedDescription)))
@@ -103,8 +94,7 @@ class LayoutsEffects: Effects {
                     Task {
                         do {
                             // 1. Attempt deletion in service layer
-//                            let levels = try await environment.layoutAPI.deleteLayout(id: layoutID)
-                            let layouts:[LevelLayout] = []
+                            let layouts = try await environment.layoutsAPI.deleteLayout(id: layoutID)
                             // 2. On success, confirm deletion
                             promise(.success(LayoutsActions.didDeleteLayout(payload: layouts)))
 //                            promise(.success(LayoutsActions.fetchLayouts()))

@@ -54,6 +54,9 @@ struct LayoutsListView: View {
                 }
             }
         }
+        .onAppear() {
+            store.dispatch(action: LayoutsActions.importLayouts())
+        }
     }
     
     private func addNewLayout() {
