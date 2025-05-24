@@ -1,37 +1,37 @@
 import Fluxor
-//import CrosscodeDataLibrary
+import CrosscodeDataLibrary
 
 
 
 let layoutEditReducer = Reducer<LayoutEditState?>(
-//    ReduceOn(LevelEditActions.selectCell) { state, action in
-//        if state == nil { return }
-//        
-//        if state?.populationState != .unpopulated { return } // Don't allow the squares to be clicked while the grid's been populated
-//        
-//        var level = state!.level
-//        let selectedCell = action.payload
-//        
-//        if let selectedCell {
-//            if let location = level.crossword.locationOfElement(byID: selectedCell ) {
-//                level.crossword.updateElement(byPos: location) { cell in
-//                    cell.toggle()
-//                }
-//                let opposite = Pos(row: level.crossword.columns - 1 - location.row, column: level.crossword.rows - 1 - location.column)
-//
-//                if opposite != location {
-//                    level.crossword.updateElement(byPos: opposite) { cell in
-//                        cell.toggle()
-//                    }
-//                }
-//            }
-//        }
-//        
-//        state!.level = level
-//        state!.selectedCell = selectedCell
-//        state!.populationState = .unpopulated
-//        state!.saveState = .dirty
-//    },
+    ReduceOn(LayoutEditActions.selectCell) { state, action in
+        if state == nil { return }
+        
+        if state?.populationState != .unpopulated { return } // Don't allow the squares to be clicked while the grid's been populated
+        
+        var level = state!.level
+        let selectedCell = action.payload
+        
+        if let selectedCell {
+            if let location = level.crossword.locationOfElement(byID: selectedCell ) {
+                level.crossword.updateElement(byPos: location) { cell in
+                    cell.toggle()
+                }
+                let opposite = Pos(row: level.crossword.columns - 1 - location.row, column: level.crossword.rows - 1 - location.column)
+
+                if opposite != location {
+                    level.crossword.updateElement(byPos: opposite) { cell in
+                        cell.toggle()
+                    }
+                }
+            }
+        }
+        
+        state!.level = level
+        state!.selectedCell = selectedCell
+        state!.populationState = .unpopulated
+        state!.saveState = .dirty
+    },
 //    ReduceOn(LevelEditActions.requestPopulation) { state, action in
 //        if state == nil { return }
 //        state!.populationState = .populating

@@ -14,31 +14,14 @@ struct LayoutsEffectsTests {
     }
     
     func setup() -> (MockStore<LayoutsState, AppEnvironment>, MockLayoutsService) {
-        let _ = Container.shared.uuid
-            .register { IncrementingUUIDProvider() }
-            .singleton
-
-        let mockAPI = MockLayoutsService()
-        
-        let environment = AppEnvironment(layoutsAPI: mockAPI)
-        let store = MockStore(
-            initialState: LayoutsState(),
-            environment: environment,
-            reducers: [layoutsReducer]
-        )
-        
-        store.register(reducer: layoutsReducer)
-        
-        store.register(effects: LayoutsEffects() )
-        
-        return (store, mockAPI)
+       return createTestStoreAndAPI(initialState: LayoutsState(), reducers: [layoutsReducer], effects: { store in LayoutsEffects() })
     }
     
     
     @Test
     func testImportFlow() async throws {
         // Given
-        let (store, mockAPI) = self.setup()
+        let (store, mockAPI) = setup()
         
         // When
         store.dispatch(action: LayoutsActions.importLayouts())
@@ -89,7 +72,3 @@ struct LayoutsEffectsTests {
         #expect(mockAPI.calledFunctions.contains("addNewLayout()"))
     }
 }
-
-
-
-

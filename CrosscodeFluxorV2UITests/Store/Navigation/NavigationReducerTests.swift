@@ -14,25 +14,9 @@ struct NavigationReducerTests {
     }
     
     func setup() -> (MockStore<NavigationState, AppEnvironment>, MockLayoutsService) {
-        let _ = Container.shared.uuid
-            .register { IncrementingUUIDProvider() }
-            .singleton
-        
-        let mockAPI = MockLayoutsService()
-        
-        let environment = AppEnvironment(layoutsAPI: mockAPI)
-        let store = MockStore(
-            initialState: NavigationState(),
-            environment: environment,
-            reducers: [navigationReducer]
-        )
-        
-//        store.register(effects: NavigationEffects())
-        
-        return (store, mockAPI)
+       return createTestStoreAndAPI(initialState: NavigationState(), reducers: [navigationReducer])
     }
-    
-    
+
     @Test
     func testNavigateToLevel() async throws {
         @Injected(\.uuid) var uuid
@@ -41,7 +25,6 @@ struct NavigationReducerTests {
         let (store, mockAPI) = self.setup()
         
         // When
-//        let wrongLevel = LevelLayout(id: uuid(), number: 1, gridText: "..|..|")
         let levelToNavTo = LevelLayout(id: uuid(), number: 2, gridText: "..|..|")
         
         store.dispatch(action: NavigationActions.navigate(payload: .layoutDetail(id: levelToNavTo.id)))
@@ -57,8 +40,6 @@ struct NavigationReducerTests {
         
         #expect(mockAPI.calledFunctions.count == 0)
         #expect(store.state.route ==  .layoutDetail(id: levelToNavTo.id))
-        
-//        #expect(store.state.route == .levelDetail(id: levelToNavTo.id))
     }
 }
         
