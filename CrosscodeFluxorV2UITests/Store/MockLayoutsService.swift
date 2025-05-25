@@ -9,6 +9,7 @@ class MockLayoutsService: LayoutsAPI {
     var calledFunctions: [String] = []
     var layouts:[LevelLayout] = []
     var layoutToAdd:LevelLayout? = nil
+    var populationResult:(String, String)? = nil
     
     init() {
         
@@ -52,7 +53,10 @@ class MockLayoutsService: LayoutsAPI {
     
     func populateCrossword(crosswordLayout: String) async throws -> (String, String) {
         calledFunctions.append(#function)
-        return (crosswordLayout, "")
+        guard let populationResult else {
+            throw MockError.importFailed
+        }
+        return populationResult
     }
     
     func depopulateCrossword(crosswordLayout: String) async throws -> (String, String) {

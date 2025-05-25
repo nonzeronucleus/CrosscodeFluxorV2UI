@@ -19,6 +19,8 @@ public extension Container {
         
         store.register(reducer: navigationReducer, for: \.navigation)
         
+        store.register(effects: LayoutEditEffects())
+        
         
 //        store.register(reducer: appReducer)
 //        store.register(effects: AppEffects(store: store) )

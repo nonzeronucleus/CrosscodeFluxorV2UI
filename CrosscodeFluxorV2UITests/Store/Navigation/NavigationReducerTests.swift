@@ -10,7 +10,7 @@ import CrosscodeDataLibrary
 
 struct NavigationReducerTests {
     init() {
-        
+        initTestEnv()
     }
     
     func setup() -> (MockStore<NavigationState, AppEnvironment>, MockLayoutsService) {

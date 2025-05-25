@@ -1,48 +1,48 @@
 import Combine
+import CrosscodeDataLibrary
 import Fluxor
 import Foundation
-//import CrosscodeDataLibrary
 
 class LayoutEditEffects: Effects {
     typealias Environment = AppEnvironment
     
-//    let populateLevel = Effect<Environment>.dispatchingMultiple { actions, environment in
-//        actions
-//            .wasCreated(from: LevelEditActions.requestPopulation)
-//            .flatMap { action in
-//                Future<[Action], Never> { promise in
-//                    Task {
-//                        do {
-//                            let initCrosswordStr = action.payload.layoutString()
-//                            let result = try await environment.layoutAPI.populateCrossword(
-//                                crosswordLayout: initCrosswordStr
-//                            )
-//                            if !Task.isCancelled {
-//                                promise(.success([
-//                                    LevelEditActions.populationComplete(
-//                                        payload: (crossword: Crossword(initString: result.0),letterMap: CharacterIntMap(from: result.1))
-//                                    )
-//                                ]))
-//                            }
-//                        } catch {
-//                            if !Task.isCancelled {
-//                                promise(.success([
-//                                    LevelEditActions.populationFailed(
-//                                        payload: error.localizedDescription)
-//                                ]))
-//                            }
-//                        }
-//                    }
-//                }
-//                .handleEvents(receiveCancel: {
-//                    Task {
-//                        await environment.layoutAPI.cancel()
-//                    }
-//                })
-//                .eraseToAnyPublisher()
-//            }
-//            .eraseToAnyPublisher()
-//    }
+    let populateLevel = Effect<Environment>.dispatchingMultiple { actions, environment in
+        actions
+            .wasCreated(from: LayoutEditActions.requestPopulation)
+            .flatMap { action in
+                Future<[Action], Never> { promise in
+                    Task {
+                        do {
+                            let initCrosswordStr = action.payload.layoutString()
+                            let result = try await environment.layoutsAPI.populateCrossword(
+                                crosswordLayout: initCrosswordStr
+                            )
+                            if !Task.isCancelled {
+                                promise(.success([
+                                    LayoutEditActions.populationComplete(
+                                        payload: (crossword: Crossword(initString: result.0),letterMap: CharacterIntMap(from: result.1))
+                                    )
+                                ]))
+                            }
+                        } catch {
+                            if !Task.isCancelled {
+                                promise(.success([
+                                    LayoutEditActions.populationFailed(
+                                        payload: error.localizedDescription)
+                                ]))
+                            }
+                        }
+                    }
+                }
+                .handleEvents(receiveCancel: {
+                    Task {
+                        await environment.layoutsAPI.cancel()
+                    }
+                })
+                .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
 //    
 //    let depopulateLevel = Effect<Environment>.dispatchingMultiple { actions, environment in
 //        actions

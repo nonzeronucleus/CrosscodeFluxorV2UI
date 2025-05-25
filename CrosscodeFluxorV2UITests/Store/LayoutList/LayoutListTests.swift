@@ -10,7 +10,7 @@ import CrosscodeDataLibrary
 
 struct LayoutsEffectsTests {
     init() {
-        
+        initTestEnv()
     }
     
     func setup() -> (MockStore<LayoutsState, AppEnvironment>, MockLayoutsService) {

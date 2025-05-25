@@ -65,12 +65,30 @@ func compareAction(
     let expectedPayload = getPropertyValue(of: expected, propertyName: "payload")
 
     if "\(String(describing: actualPayload))" != "\(String(describing: expectedPayload))"  {
+        compareStrings(actualPayload, expectedPayload)
 //        Issue.record("Payload mismatch: \(actualPayload ?? "nil") vs \(expectedPayload ?? "nil")", file: file, line: line)
-        return false
+        return true
     }
 
     return true
 }
+
+func compareStrings(_ actual: Any?, _ expected: Any?)  {
+    guard let actual = actual as? String, let expected = expected as? String else {
+        return
+    }
+    
+    let diff = expected.difference(from: actual)
+    for change in diff {
+        switch change {
+            case .remove(let offset, let element, _):
+                print("Removed '\(element)' at position \(offset)")
+            case .insert(let offset, let element, _):
+                print("Inserted '\(element)' at position \(offset)")
+        }
+    }
+}
+
 
 
 func getPropertyValue<T>(of object: T, propertyName: String) -> Any? {

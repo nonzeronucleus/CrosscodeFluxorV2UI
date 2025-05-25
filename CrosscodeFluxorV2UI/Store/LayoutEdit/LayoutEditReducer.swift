@@ -32,37 +32,37 @@ let layoutEditReducer = Reducer<LayoutEditState?>(
         state!.populationState = .unpopulated
         state!.saveState = .dirty
     },
-//    ReduceOn(LevelEditActions.requestPopulation) { state, action in
-//        if state == nil { return }
-//        state!.populationState = .populating
-//    },
-//    ReduceOn(LevelEditActions.populationComplete) { state, action in
+    ReduceOn(LayoutEditActions.requestPopulation) { state, action in
+        if state == nil { return }
+        state!.populationState = .populating
+    },
+    ReduceOn(LayoutEditActions.populationComplete) { state, action in
+        if state == nil { return }
+        state!.level.crossword = action.payload.crossword
+        state!.level.letterMap = action.payload.letterMap
+        state!.populationState = .populated
+        state!.saveState = .clean
+    },
+    ReduceOn(LayoutEditActions.populationCancelled) { state, action in
+        if state == nil { return }
+        state!.populationState = .unpopulated
+    },
+//    ReduceOn(LayoutEditState.depopulationComplete) { state, action in
 //        if state == nil { return }
 //        state!.level.crossword = action.payload.crossword
 //        state!.level.letterMap = action.payload.letterMap
-//        state!.populationState = .populated
-//        state!.saveState = .clean
-//    },
-//    ReduceOn(LevelEditActions.populationCancelled) { state, action in
-//        if state == nil { return }
-//        state!.populationState = .unpopulated
-//    },
-//    ReduceOn(LevelEditActions.depopulationComplete) { state, action in
-//        if state == nil { return }
-//        state!.level.crossword = action.payload.crossword
-//        state!.level.letterMap = action.payload.letterMap
 //        state!.populationState = .unpopulated
 //        state!.saveState = .clean
 //    },
-//    ReduceOn(LevelEditActions.saveLayout) { state, action in
+//    ReduceOn(LayoutEditState.saveLayout) { state, action in
 //        if state == nil { return }
 //        state!.saveState = .saving
 //    },
-//    ReduceOn(LevelEditActions.saveLayoutSuccess) { state, action in
+//    ReduceOn(LayoutEditState.saveLayoutSuccess) { state, action in
 //        if state == nil { return }
 //        state!.saveState = .clean
 //    },
-//    ReduceOn(LevelEditActions.saveLayoutFailure) { state, action in
+//    ReduceOn(LayoutEditState.saveLayoutFailure) { state, action in
 //        state!.saveState = .dirty
 //        print("Save failed \(action.payload)")
 //    }
