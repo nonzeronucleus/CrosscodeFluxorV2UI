@@ -42,6 +42,12 @@ class MockLayoutsService: LayoutsAPI {
         return layouts
     }
     
+    func fetchLayout(id: UUID) async throws -> LevelLayout? {
+        return layouts.first { $0.id == id }
+    }
+    
+
+    
     func deleteLayout(id: UUID) async throws -> [LevelLayout] {
         calledFunctions.append(#function)
         return []

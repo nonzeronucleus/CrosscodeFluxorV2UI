@@ -46,12 +46,11 @@ struct AppReducerTests {
         let levelToNavTo = LevelLayout(id: uuid(), number: 2, gridText: "..|..|")
         mockAPI.layouts = [wrongLevel, levelToNavTo]
         
-        store.dispatch(action: LayoutEditActions.selectLevel(payload: levelToNavTo))
+        store.dispatch(action: NavigationActions.navigate(payload: .layoutDetail(id: levelToNavTo.id)))
 
         // Then
         let expectedActions = [
-            LayoutEditActions.selectLevel(payload: levelToNavTo),
-            NavigationActions.navigate(payload: .layoutDetail(id: levelToNavTo.id)),
+            NavigationActions.navigate(payload: .layoutDetail(id: levelToNavTo.id))
         ] as [any Action]
         
         try await Task.sleep(for: .seconds(0.2))

@@ -4,6 +4,9 @@ import CrosscodeDataLibrary
 
 
 let layoutEditReducer = Reducer<LayoutEditState?>(
+    ReduceOn(LayoutEditActions.layoutLoaded) { state, action in
+        state = LayoutEditState(level: action.payload)
+    },
     ReduceOn(LayoutEditActions.selectCell) { state, action in
         if state == nil { return }
         
@@ -47,25 +50,25 @@ let layoutEditReducer = Reducer<LayoutEditState?>(
         if state == nil { return }
         state!.populationState = .unpopulated
     },
-//    ReduceOn(LayoutEditState.depopulationComplete) { state, action in
-//        if state == nil { return }
-//        state!.level.crossword = action.payload.crossword
-//        state!.level.letterMap = action.payload.letterMap
-//        state!.populationState = .unpopulated
-//        state!.saveState = .clean
-//    },
-//    ReduceOn(LayoutEditState.saveLayout) { state, action in
-//        if state == nil { return }
-//        state!.saveState = .saving
-//    },
-//    ReduceOn(LayoutEditState.saveLayoutSuccess) { state, action in
-//        if state == nil { return }
-//        state!.saveState = .clean
-//    },
-//    ReduceOn(LayoutEditState.saveLayoutFailure) { state, action in
-//        state!.saveState = .dirty
-//        print("Save failed \(action.payload)")
-//    }
+    ReduceOn(LayoutEditActions.depopulationComplete) { state, action in
+        if state == nil { return }
+        state!.level.crossword = action.payload.crossword
+        state!.level.letterMap = action.payload.letterMap
+        state!.populationState = .unpopulated
+        state!.saveState = .clean
+    },
+    ReduceOn(LayoutEditActions.saveLayout) { state, action in
+        if state == nil { return }
+        state!.saveState = .saving
+    },
+    ReduceOn(LayoutEditActions.saveLayoutSuccess) { state, action in
+        if state == nil { return }
+        state!.saveState = .clean
+    },
+    ReduceOn(LayoutEditActions.saveLayoutFailure) { state, action in
+        state!.saveState = .dirty
+        print("Save failed \(action.payload)")
+    }
 )
 
 //

@@ -15,8 +15,55 @@ struct LayoutEditEffectsTests {
         initTestEnv()
     }
 
-    func setup(layout: LevelLayout) -> (MockStore<LayoutEditState?, AppEnvironment>, MockLayoutsService) {
+    func setup(layout: LevelLayout? = nil) -> (MockStore<LayoutEditState?, AppEnvironment>, MockLayoutsService) {
+        guard let layout else {
+            return createTestStoreAndAPI(initialState:nil, reducers: [layoutEditReducer], effects: { store in LayoutEditEffects() })
+        }
         return createTestStoreAndAPI(initialState: LayoutEditState(level: layout), reducers: [layoutEditReducer], effects: { store in LayoutEditEffects() })
+    }
+        
+    @Test
+    func testLoadLayout() async throws {
+        // Given LayoutEditState is empty
+        
+        let (store, mockLayoutsService) = setup()
+        mockLayoutsService.layouts = [
+            LevelLayout(id: uuid(), number: 1, gridText: "...|...|...|"),
+            LevelLayout(id: uuid(), number: 2, gridText: "...|...|...|")
+        ]
+
+        // When requestiong load for an existing level
+        let idToSelect = mockLayoutsService.layouts[1].id
+        let dispatchAction = LayoutEditActions.requestLoadLayout(payload: idToSelect)
+        
+        store.dispatch(action: dispatchAction)
+        try await Task.sleep(for: .seconds(0.2))
+        
+        // Expect an action to be triggered to load the level
+        // and the state to be created with the relevant level details
+        
+        let expectedActions = [
+            dispatchAction,
+            LayoutEditActions.layoutLoaded(payload: mockLayoutsService.layouts[1])
+        ] as [any Action]
+
+        #expect(store.dispatchedActions.count == expectedActions.count)
+        
+        if (store.dispatchedActions.count == expectedActions.count) {
+            let expectedPayloadComplete = expectedActions[1]
+            let actualPayloadComplete = store.dispatchedActions[1]
+            
+            if let expectedPayload = getPropertyValue(of: expectedPayloadComplete, propertyName: "payload") as? LevelLayout,
+               let actualPayload = getPropertyValue(of: actualPayloadComplete, propertyName: "payload") as? LevelLayout {
+                #expect(expectedPayload.crossword.layoutString() == actualPayload.crossword.layoutString())
+            }
+            else {
+                Issue.record("No payloads found for requestLoadLayout")
+            }
+        }
+        
+        #expect(store.state != nil)
+        #expect(store.state?.level == mockLayoutsService.layouts[1])
     }
     
     @Test
@@ -93,7 +140,6 @@ struct LayoutEditEffectsTests {
         
         #expect(store.state?.level.gridText == populatedCrosswordText)
         
-//        #expect(compareActions(store.dispatchedActions, expectedActions))
         // Make sure all APIs have been called
         #expect(mockAPI.calledFunctions.count == 1)
         #expect(mockAPI.calledFunctions.contains("populateCrossword(crosswordLayout:)"))

@@ -19,6 +19,7 @@ public extension Container {
         
         store.register(reducer: navigationReducer, for: \.navigation)
         
+        store.register(reducer: layoutEditReducer, for: \.levelEdit)
         store.register(effects: LayoutEditEffects())
         
         

@@ -21,8 +21,6 @@ struct LayoutEditView: View {
                     backgroundGradient
                     
                     VStack(spacing: 0) { // Changed to 0 spacing between sections
-                        SaveStateView()
-                        
                         crosswordView(geometry: geometry)
                             .padding(.top, 5)
                         
@@ -58,6 +56,9 @@ struct LayoutEditView: View {
             .onDisappear {
                 store.dispatch(action: NavigationActions.dismiss())
             }
+        }
+        .onAppear {
+            store.dispatch(action: LayoutEditActions.requestLoadLayout(payload: self.layoutID))
         }
     }
     

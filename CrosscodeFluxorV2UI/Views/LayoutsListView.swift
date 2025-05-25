@@ -13,9 +13,13 @@ struct LayoutsListView: View {
     
     var body: some View {
         NavigationStack(path: $navigationPath) {
-            LevelsList(store:store, layouts:layouts)
+            VStack {
+                LevelsList(store:store, layouts:layouts)
+            }
             .navigationDestination(for: UUID.self) { id in
-                LayoutEditView(layoutID: id)
+                VStack {
+                    LayoutEditView(layoutID: id)
+                }
             }
             .navigationTitle("Layouts")  // Add title
             .toolbar {
@@ -73,7 +77,8 @@ struct LevelsList: View {
                 }
                 .simultaneousGesture(
                     TapGesture().onEnded {
-                        store.dispatch(action: LayoutEditActions.selectLevel(payload: layout))
+//                        store.dispatch(action: LayoutEditActions.selectLevel(payload: layout))
+                        store.dispatch(action: NavigationActions.navigate(payload: .layoutDetail(id: layout.id)))
                     }
                 )
                 .swipeActions(edge: .trailing) {

@@ -5,9 +5,15 @@ import CrosscodeDataLibrary
 typealias PopulationPayload = (crossword: Crossword, letterMap: CharacterIntMap?)
 
 enum LayoutEditActions {
-    static let selectLevel = ActionTemplate(id: "[Editing] Selected level",
-                                            payloadType: LevelLayout.self,
-    )
+//    static let selectLevel = ActionTemplate(id: "[Editing] Selected level",
+//                                            payloadType: LevelLayout.self,
+//    )
+    static let requestLoadLayout = ActionTemplate(id: "[Editing] Load level", payloadType: UUID.self)
+    static let layoutLoaded = ActionTemplate(id: "[Editing] Layout loaded", payloadType: LevelLayout.self)
+    static let layoutLoadingFailed = ActionTemplate(id: "[Editing] Layout loading failed", payloadType: String.self)
+    
+    
+    
     static let selectCell = ActionTemplate(id: "[Editing] Selected cell", payloadType: UUID?.self)
     static let requestCancelPopulation = ActionTemplate(id: "[Editing] Request to cancel", payloadType: Crossword.self)
     static let requestPopulation = ActionTemplate(id: "[Editing] Request to populate level", payloadType: Crossword.self)
