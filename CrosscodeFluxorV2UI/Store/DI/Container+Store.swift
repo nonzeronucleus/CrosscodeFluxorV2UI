@@ -22,6 +22,9 @@ public extension Container {
         store.register(reducer: layoutEditReducer, for: \.levelEdit)
         store.register(effects: LayoutEditEffects())
         
+        store.register(reducer: settingsReducer, for: \.settings)
+        
+        
         
 //        store.register(reducer: appReducer)
 //        store.register(effects: AppEffects(store: store) )

@@ -12,10 +12,3 @@ struct EditLayoutsListView: View {
         Text("EditLayoutsListView")
     }
 }
-
-struct SettingsView: View {
-    var body: some View {
-        Text("SettingsView")
-    }
-}
-

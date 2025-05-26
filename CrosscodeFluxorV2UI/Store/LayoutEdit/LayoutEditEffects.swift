@@ -6,10 +6,7 @@ import Foundation
 class LayoutEditEffects: Effects {
     typealias Environment = AppEnvironment
     
-    
-    
-    
-    let loadLevel = Effect<Environment>.dispatchingMultiple { actions, environment in
+    let loadLayout = Effect<Environment>.dispatchingMultiple { actions, environment in
         actions
             .wasCreated(from: LayoutEditActions.requestLoadLayout)
             .flatMap { action in
@@ -17,8 +14,6 @@ class LayoutEditEffects: Effects {
                     Task {
                         do {
                             let levelId = action.payload
-                            debugPrint("Loading level with ID: \(levelId)")
-                            
                             let result = try await environment.layoutsAPI.fetchLayout(id: levelId)
                             
                             if let result {
@@ -27,55 +22,19 @@ class LayoutEditEffects: Effects {
                                         payload: result
                                     )]))
                             }
-
-                            
-                            // Your actual population logic here
-                            // For example:
-                            // let crossword = try await environment.loadLevel(id: levelId)
-                            // promise(.success([populationCompleteAction]))
-                            
-                            // Temporary mock success
-//                            promise(.success([
-//                                LayoutEditActions.populationComplete(
-//                                    payload: (Crossword.empty, nil)
-//                                )
-//                            ]))
-//                        } catch {
-//                            promise(.success([
-//                                LayoutEditActions.populationFailed(payload: error.localizedDescription)
-//                            ]))
+                            else {
+                                promise(.success([
+                                    LayoutEditActions.populationFailed(payload: "Could not load layout for id \(levelId)")
+                                ]))
+                            }
                         }
                     }
                 }
-                .eraseToAnyPublisher() // This fixes the type mismatch
+                .eraseToAnyPublisher()
             }
-            .eraseToAnyPublisher() // Needed for the outer chain
+            .eraseToAnyPublisher()
     }
     
-//    let populateLevel = Effect<Environment>.dispatchingMultiple { actions, environment in
-//        actions
-//            .wasCreated(from: LayoutEditActions.loadLevel)
-//            .flatMap { action in
-//                Future<[Action], Never> { promise in
-//                    Task {
-//                        do {
-//                            debugPrint(action.payload)
-//                        }
-//                    }
-//                }
-//            }
-//    }
-
-    
-    //                            let result = try await environment.layoutsAPI.getLevel(
-    //                                levelId: action.payload
-    //                            )
-    //                            if !Task.isCancelled {
-    //                                promise(.success([
-    //                                    LayoutEditActions.loadLevel.success(payload: result),
-    //                                ]))
-    //                            }
-
     
     let populateLevel = Effect<Environment>.dispatchingMultiple { actions, environment in
         actions

@@ -12,7 +12,36 @@ struct LayoutsListView: View {
     
     var body: some View {
         VStack{
-            LevelsList(store:store, layouts:layouts)
+            List {
+                ForEach(layouts, id: \.id) { layout in
+                    NavigationLink(value: layout.id) {
+                        Text("\(layout.id)")
+                    }
+                    .simultaneousGesture(
+                        TapGesture().onEnded {
+                            store.dispatch(action: NavigationActions.navigateToDetail(payload: layout.id))
+                        }
+                    )
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            layoutToDelete = layout.id
+                            showDeleteAlert = true
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+                }
+            }
+        }
+        .alert("Delete Layout",
+               isPresented: $showDeleteAlert,
+               presenting: layoutToDelete) { id in
+            Button("Cancel", role: .cancel) {}
+            Button("Delete", role: .destructive) {
+                store.dispatch(action: LayoutsActions.deleteLayout(payload: id))
+            }
+        } message: { id in
+            Text("Are you sure you want to delete this layout?")
         }
         .onAppear() {
             store.dispatch(action: LayoutsActions.importLayouts())
@@ -20,6 +49,45 @@ struct LayoutsListView: View {
     }
 }
 
+
+//struct LevelsList: View {
+//    let store: Store<AppState, AppEnvironment>
+//    let layouts: [LevelLayout]
+//    
+//    var body: some View {
+//        List {
+//            ForEach(layouts, id: \.id) { layout in
+//                NavigationLink(value: layout.id) {
+//                    Text("\(layout.id)")
+//                }
+//                .simultaneousGesture(
+//                    TapGesture().onEnded {
+//                        store.dispatch(action: NavigationActions.navigateToDetail(payload: layout.id))
+////                        store.dispatch(action: NavigationActions.navigate(payload: .layoutDetail(id: layout.id)))
+//                    }
+//                )
+//                .swipeActions(edge: .trailing) {
+//                    Button(role: .destructive) {
+//                        layoutToDelete = layout.id
+//                        showDeleteAlert = true
+//                    } label: {
+//                        Label("Delete", systemImage: "trash")
+//                    }
+//                }
+//            }
+//        }
+//        .alert("Delete Layout",
+//               isPresented: $showDeleteAlert,
+//               presenting: layoutToDelete) { id in
+//            Button("Cancel", role: .cancel) {}
+//            Button("Delete", role: .destructive) {
+//                store.dispatch(action: LayoutsActions.deleteLayout(payload: id))
+//            }
+//        } message: { id in
+//            Text("Are you sure you want to delete this layout?")
+//        }
+//    }
+//}
 
 
 
@@ -90,34 +158,34 @@ struct LayoutsListView: View {
 //}
 
 //
-struct LevelsList: View {
-    let store: Store<AppState, AppEnvironment>
-    let layouts: [LevelLayout]
-    
-    var body: some View {
-        List {
-            ForEach(layouts, id: \.id) { layout in
-                NavigationLink(value: layout.id) {
-                    Text("\(layout.id)")
-                }
-                .simultaneousGesture(
-                    TapGesture().onEnded {
-                        store.dispatch(action: NavigationActions.navigateToDetail(payload: layout.id))
-//                        store.dispatch(action: NavigationActions.navigate(payload: .layoutDetail(id: layout.id)))
-                    }
-                )
-                .swipeActions(edge: .trailing) {
-                    Button(role: .destructive) {
-//                        layoutToDelete = layout.id
-//                        showDeleteAlert = true
-                    } label: {
-                        Label("Delete", systemImage: "trash")
-                    }
-                }
-            }
-        }
-    }
-}
+//struct LevelsList: View {
+//    let store: Store<AppState, AppEnvironment>
+//    let layouts: [LevelLayout]
+//    
+//    var body: some View {
+//        List {
+//            ForEach(layouts, id: \.id) { layout in
+//                NavigationLink(value: layout.id) {
+//                    Text("\(layout.id)")
+//                }
+//                .simultaneousGesture(
+//                    TapGesture().onEnded {
+//                        store.dispatch(action: NavigationActions.navigateToDetail(payload: layout.id))
+////                        store.dispatch(action: NavigationActions.navigate(payload: .layoutDetail(id: layout.id)))
+//                    }
+//                )
+//                .swipeActions(edge: .trailing) {
+//                    Button(role: .destructive) {
+////                        layoutToDelete = layout.id
+////                        showDeleteAlert = true
+//                    } label: {
+//                        Label("Delete", systemImage: "trash")
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 //            
 //#Preview {
 //    var state = AppState()

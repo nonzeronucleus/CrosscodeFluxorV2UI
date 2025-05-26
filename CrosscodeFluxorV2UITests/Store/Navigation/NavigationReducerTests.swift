@@ -40,8 +40,31 @@ struct NavigationReducerTests {
         #expect(compareActions(store.dispatchedActions, expectedActions))
         
         #expect(mockAPI.calledFunctions.count == 0)
-//        #expect(store.state.route ==  .layoutDetail(id: levelToNavTo.id))
         #expect(store.state.presentedRoute ==  .layoutDetail(levelToNavTo.id))
+    }
+    
+    @Test func testNavigateToSettings() async throws {
+        // Given
+        let (store, _) = self.setup()
+        #expect(store.state.presentedRoute == nil)
+        
+        // When
+        let dispatchedAction = NavigationActions.showSettings()
+        
+        store.dispatch(action: dispatchedAction)
+
+        // Then
+        let expectedActions = [
+            dispatchedAction
+        ] as [any Action]
+        
+        try await Task.sleep(for: .seconds(0.2))
+        
+        #expect(store.dispatchedActions.count == expectedActions.count)
+
+        #expect(store.state.presentedRoute == .settings)
+
+        
     }
 }
         
