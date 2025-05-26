@@ -26,11 +26,12 @@ struct NavigationReducerTests {
         
         // When
         let levelToNavTo = LevelLayout(id: uuid(), number: 2, gridText: "..|..|")
+        let dispatchedAction = NavigationActions.navigateToDetail(payload: levelToNavTo.id)
         
-        store.dispatch(action: NavigationActions.navigate(payload: .layoutDetail(id: levelToNavTo.id)))
+        store.dispatch(action: dispatchedAction)
         // Then
         let expectedActions = [
-            NavigationActions.navigate(payload: .layoutDetail(id: levelToNavTo.id)),
+            dispatchedAction
         ] as [any Action]
         
         try await Task.sleep(for: .seconds(0.2))
@@ -39,7 +40,8 @@ struct NavigationReducerTests {
         #expect(compareActions(store.dispatchedActions, expectedActions))
         
         #expect(mockAPI.calledFunctions.count == 0)
-        #expect(store.state.route ==  .layoutDetail(id: levelToNavTo.id))
+//        #expect(store.state.route ==  .layoutDetail(id: levelToNavTo.id))
+        #expect(store.state.presentedRoute ==  .layoutDetail(levelToNavTo.id))
     }
 }
         

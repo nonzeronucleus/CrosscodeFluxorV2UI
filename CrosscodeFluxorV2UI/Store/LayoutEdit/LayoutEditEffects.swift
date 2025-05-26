@@ -172,7 +172,7 @@ class LayoutEditEffects: Effects {
             .wasCreated(from: LayoutEditActions.selectCell)
             .flatMap { _ -> AnyPublisher<Action, Never> in
 
-                @AppSelector(LayoutEditSelectors.level) var level
+                @StateSelector(LayoutEditSelectors.level) var level
                 guard let level else {
                     return Just(LayoutEditActions.saveLayoutFailure(payload: "Level not found"))
                         .eraseToAnyPublisher()

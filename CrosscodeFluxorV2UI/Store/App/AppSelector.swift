@@ -1,16 +1,11 @@
 import Fluxor
-import Factory
 
-@propertyWrapper
-struct AppSelector<Value> {
-    @Injected(\.store) var store
-    private let selector: Selector<AppState, Value>
+struct AppSelectors {
+    static let navigationState = Selector(
+        keyPath: \AppState.navigation
+    )
     
-    init(_ selector: Selector<AppState, Value>) {
-        self.selector = selector
-    }
-    
-    var wrappedValue: Value {
-        store.selectCurrent(selector)
-    }
+//    static let levels = Selector(
+//        keyPath: \AppState.levels
+//    )
 }

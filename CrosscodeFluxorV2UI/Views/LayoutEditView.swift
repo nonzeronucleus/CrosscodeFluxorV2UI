@@ -7,11 +7,11 @@ import CrosscodeDataLibrary
 struct LayoutEditView: View {
     let layoutID: UUID
     @EnvironmentObject var store: Store<AppState, AppEnvironment>
-    @AppSelector(LayoutEditSelectors.level) var selectedLayout
-    @AppSelector(LayoutEditSelectors.selectedCell) var selectedCell
-    @AppSelector(LayoutEditSelectors.checking) var checking
-    @AppSelector(LayoutEditSelectors.isBusy) var isBusy
-    @AppSelector(LayoutEditSelectors.isPopulated) var isPopulated
+    @StateSelector(LayoutEditSelectors.level) var selectedLayout
+    @StateSelector(LayoutEditSelectors.selectedCell) var selectedCell
+    @StateSelector(LayoutEditSelectors.checking) var checking
+    @StateSelector(LayoutEditSelectors.isBusy) var isBusy
+    @StateSelector(LayoutEditSelectors.isPopulated) var isPopulated
 
     var body: some View {
         GeometryReader { geometry in
@@ -54,7 +54,7 @@ struct LayoutEditView: View {
             }
             .ignoresSafeArea(.keyboard, edges: .bottom)
             .onDisappear {
-                store.dispatch(action: NavigationActions.dismiss())
+                store.dispatch(action: NavigationActions.dismissPresentedRoute())
             }
         }
         .onAppear {

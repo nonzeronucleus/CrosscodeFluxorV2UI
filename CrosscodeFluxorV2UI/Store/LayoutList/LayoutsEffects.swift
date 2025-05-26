@@ -65,7 +65,7 @@ class LayoutsEffects: Effects {
     let fetchLayouts = Effect<Environment>.dispatchingOne { actions, environment in
         Publishers.Merge(
             actions.wasCreated(from: LayoutsActions.fetchLayouts),
-            actions.wasCreated(from: NavigationActions.dismiss)
+            actions.wasCreated(from: NavigationActions.dismissPresentedRoute)
         )
         .flatMap { _ -> AnyPublisher<Action, Never> in
                 Future<Action, Never> { promise in
