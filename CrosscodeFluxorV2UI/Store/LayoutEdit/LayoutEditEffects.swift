@@ -14,12 +14,12 @@ class LayoutEditEffects: Effects {
                     Task {
                         do {
                             let levelId = action.payload
-                            let result = try await environment.layoutsAPI.fetchLayout(id: levelId)
+                            let result = try await environment.layoutsAPI.fetchLevel(id: levelId)
                             
                             if let result {
                                 promise(.success([
                                     LayoutEditActions.layoutLoaded(
-                                        payload: result
+                                        payload: result as! LevelLayout
                                     )]))
                             }
                             else {

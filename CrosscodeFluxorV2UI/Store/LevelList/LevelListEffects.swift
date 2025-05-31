@@ -1,0 +1,116 @@
+import Combine
+import Fluxor
+import Foundation
+import Factory
+import CrosscodeDataLibrary
+
+class LeveListEffects: Effects {
+    typealias Environment = AppEnvironment
+    
+    let importLevels = Effect<Environment>.dispatchingOne { actions, environment in
+        actions
+            .wasCreated(from: LevelListActions.Import.start)
+            .flatMap { _ -> AnyPublisher<Action, Never> in
+                Future<Action, Never> { promise in
+                    Task {
+                        do {
+                            try await environment.layoutsAPI.importLevels()
+                            promise(.success(LevelListActions.Import.success()))
+                        } catch {
+                            promise(.success(LevelListActions.Import.failure(payload: error)))
+                        }
+                    }
+                }
+                .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    
+    let importedLevels = Effect<Environment>.dispatchingOne { actions, environment in
+        actions
+            .wasCreated(from: LevelListActions.Import.success)
+            .flatMap { _ -> AnyPublisher<Action, Never> in
+                Future<Action, Never> { promise in
+                    Task {
+                        promise(.success(LevelListActions.FetchAll.start()))
+                    }
+                }
+                .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    
+//    let createNewLayout = Effect<Environment>.dispatchingOne { actions, environment in
+//        actions
+//            .wasCreated(from: LevelListActions.createNewLayout)
+//            .flatMap { _ -> AnyPublisher<Action, Never> in
+//                Future<Action, Never> { promise in
+//                    Task {
+//                        do {
+//                            let levels = try await environment.levelsAPI.addNewLayout()
+//                            promise(.success(LevelListActions.didCreateNewLayout(payload: levels)))
+//                        } catch {
+//                            promise(.success(LevelListActions.didFailFetchingLevels(payload: error.localizedDescription)))
+//                        }
+//                    }
+//                }
+//                .eraseToAnyPublisher()
+//            }
+//            .eraseToAnyPublisher()
+//    }
+
+
+    let fetchLevels = Effect<Environment>.dispatchingOne { actions, environment in
+        Publishers.Merge(
+            actions.wasCreated(from: LevelListActions.FetchAll.start),
+            actions.wasCreated(from: NavigationActions.dismissPresentedRoute)
+        )
+        .flatMap { _ -> AnyPublisher<Action, Never> in
+                Future<Action, Never> { promise in
+                    Task {
+                        do {
+                            let levels = try await environment.layoutsAPI.fetchAllLevels()
+                            promise(.success(LevelListActions.FetchAll.success(payload: levels)))
+                        } catch {
+                            promise(.success(LevelListActions.FetchAll.failure(payload: error)))
+                        }
+                    }
+                }
+                .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    let deleteLayout = Effect<Environment>.dispatchingOne { actions, environment in
+        actions
+            .wasCreated(from: LevelListActions.Delete.start)  // Match the delete action
+            .flatMap { action -> AnyPublisher<Action, Never> in
+                // Extract the layout ID from the action payload
+                let layoutID = action.payload
+                
+                return Future<Action, Never> { promise in
+                    Task {
+                        do {
+                            // 1. Attempt deletion in service layer
+                            let levels = try await environment.layoutsAPI.deleteLevel(id: layoutID)
+                            // 2. On success, confirm deletion
+                            promise(.success(LevelListActions.Delete.success(payload: levels)))
+//                            promise(.success(LevelListActions.fetchLevels()))
+                            
+                            // Optional: Refresh the list after deletion
+//                            promise(.success(LevelListActions.fetchLevels))
+                        } catch {
+                            // 3. Handle failure
+                            promise(.success(LevelListActions.Delete.failure(
+                                payload: error
+                            )))
+                        }
+                    }
+                }
+                .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
+}

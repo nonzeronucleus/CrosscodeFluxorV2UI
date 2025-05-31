@@ -25,6 +25,24 @@ public extension Container {
         store.register(reducer: settingsReducer, for: \.settings)
         
         
+        let levelLayoutReducer: Reducer<LevelListState<LevelLayout>> = makeLevelListReducer()
+        store.register(reducer: levelLayoutReducer, for: \.levelLayouts)
+        store.register(effects: LeveListEffects())
+        
+//        let s = testFunc<LevelLayout>() //level:LevelLayout(id: UUID(), number: 1, crossword: Crossword(initString: "-|-|"), letterMap: nil))
+//                                
+//        debugPrint(s)
+
+//        let levelLayoutReducer = createLevelListReducer<LevelLayout>()
+//            .reduce(on: EditableLevelActions.customAction) { state, action in
+//                // EditableLevel-specific reductions
+//            }
+        
+//        store.register(reducer: levelListReducer, for: \.levelLayouts)
+        
+        
+        
+        
         
 //        store.register(reducer: appReducer)
 //        store.register(effects: AppEffects(store: store) )

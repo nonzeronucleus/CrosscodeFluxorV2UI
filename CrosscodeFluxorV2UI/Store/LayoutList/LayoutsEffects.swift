@@ -14,7 +14,7 @@ class LayoutsEffects: Effects {
                 Future<Action, Never> { promise in
                     Task {
                         do {
-                            try await environment.layoutsAPI.importLayouts()
+                            try await environment.layoutsAPI.importLevels()
                             promise(.success(LayoutsActions.didImportLayouts()))
                         } catch {
                             promise(.success(LayoutsActions.didFailImportingLayouts(payload: error.localizedDescription)))

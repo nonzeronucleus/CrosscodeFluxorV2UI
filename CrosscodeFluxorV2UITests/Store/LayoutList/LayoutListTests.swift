@@ -41,8 +41,8 @@ struct LayoutsEffectsTests {
         
         // Make sure all APIs have been called
         #expect(mockAPI.calledFunctions.count == 2)
-        #expect(mockAPI.calledFunctions.contains("importLayouts()"))
-        #expect(mockAPI.calledFunctions.contains("fetchAllLayouts()"))
+        #expect(mockAPI.calledFunctions.contains("importLevels()"))
+        #expect(mockAPI.calledFunctions.contains("fetchAllLevels()"))
     }
         
 
@@ -52,7 +52,7 @@ struct LayoutsEffectsTests {
         // Given
         let (store, mockAPI) = self.setup()
         let layoutToAdd = LevelLayout(id: uuid(), number: 1, gridText: "..|..|")
-        mockAPI.layoutToAdd = layoutToAdd
+        mockAPI.levelToAdd = layoutToAdd
         
         // When
         store.dispatch(action: LayoutsActions.createNewLayout())

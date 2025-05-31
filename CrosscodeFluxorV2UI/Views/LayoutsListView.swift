@@ -45,6 +45,7 @@ struct LayoutsListView: View {
         }
         .onAppear() {
             store.dispatch(action: LayoutsActions.importLayouts())
+            store.dispatch(action: LevelListActions.FetchAll.start())
         }
     }
 }

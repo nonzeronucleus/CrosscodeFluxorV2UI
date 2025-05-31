@@ -2,20 +2,9 @@ import Factory
 import CrosscodeDataLibrary
 
 class MockLayoutsService: LayoutsAPI {
-    func test() -> String {
-        "MockLayoutsService"
-    }
+
     
-    var calledFunctions: [String] = []
-    var layouts:[LevelLayout] = []
-    var layoutToAdd:LevelLayout? = nil
-    var populationResult:(String, String)? = nil
-    
-    init() {
-        
-    }
-    
-    func importLayouts() async throws {
+    func importLevels() async throws {
         calledFunctions.append(#function)
         importCalled = true
         if shouldThrow {
@@ -23,40 +12,54 @@ class MockLayoutsService: LayoutsAPI {
         }
     }
     
+    func fetchAllLevels() async throws -> [any Level] {
+        calledFunctions.append(#function)
+        return levels
+
+    }
+    
+    func deleteLevel(id: UUID) async throws -> [any Level] {
+        calledFunctions.append(#function)
+        return []
+
+    }
+    
+    func saveLevel(level: any Level) async throws {
+        calledFunctions.append(#function)
+    }
+    
+    func test() -> String {
+        "MockLayoutsService"
+    }
+    
+    var calledFunctions: [String] = []
+    var levels:[LevelLayout] = []
+    var levelToAdd:LevelLayout? = nil
+    var populationResult:(String, String)? = nil
+    
+    init() {
+        
+    }
+    
     func addNewLayout() async throws -> [LevelLayout] {
         @Injected(\.uuid) var uuid
         calledFunctions.append(#function)
-        if let layoutToAdd {
-            layouts.append(layoutToAdd)
+        if let levelToAdd {
+            levels.append(levelToAdd)
         }
         else {
-            let layout: LevelLayout = LevelLayout(id: uuid.uuidGenerator(), number: 1, gridText: "..|..|")
-            layouts.append(layout)
+            let level = LevelLayout(id: uuid.uuidGenerator(), number: 1, gridText: "..|..|")
+            levels.append(level)
         }
         
-        return layouts
+        return levels
     }
     
-    func fetchAllLayouts() async throws -> [LevelLayout] {
-        calledFunctions.append(#function)
-        return layouts
-    }
-    
-    func fetchLayout(id: UUID) async throws -> LevelLayout? {
-        return layouts.first { $0.id == id }
+    func fetchLevel(id: UUID) async throws -> (any Level)? {
+        return levels.first { $0.id == id }
     }
     
 
-    
-    func deleteLayout(id: UUID) async throws -> [LevelLayout] {
-        calledFunctions.append(#function)
-        return []
-    }
-    
-    func saveLevel(level: LevelLayout) async throws {
-        calledFunctions.append(#function)
-    }
-    
     func populateCrossword(crosswordLayout: String) async throws -> (String, String) {
         calledFunctions.append(#function)
         guard let populationResult else {
@@ -79,5 +82,29 @@ class MockLayoutsService: LayoutsAPI {
     
     enum MockError: Error {
         case importFailed
+    }
+}
+
+
+
+extension MockLayoutsService {
+    public func importLayouts() async throws {
+        try await importLevels()
+    }
+    
+    public func fetchLayout(id: UUID) async throws -> LevelLayout? {
+        return try await fetchLevel(id: id) as? LevelLayout
+    }
+    
+    public func fetchAllLayouts() async throws -> [LevelLayout] {
+        return try await fetchAllLevels() as? [LevelLayout] ?? []
+    }
+    
+    public func deleteLayout(id: UUID) async throws -> [LevelLayout] {
+        return try await deleteLevel(id: id) as? [LevelLayout] ?? []
+    }
+    
+    public func saveLayout(level: LevelLayout) async throws {
+        try await saveLevel(level: level)
     }
 }

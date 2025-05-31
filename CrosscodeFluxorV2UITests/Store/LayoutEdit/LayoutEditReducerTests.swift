@@ -27,13 +27,13 @@ struct LayoutEditEffectsTests {
         // Given LayoutEditState is empty
         
         let (store, mockLayoutsService) = setup()
-        mockLayoutsService.layouts = [
+        mockLayoutsService.levels = [
             LevelLayout(id: uuid(), number: 1, gridText: "...|...|...|"),
             LevelLayout(id: uuid(), number: 2, gridText: "...|...|...|")
         ]
 
         // When requestiong load for an existing level
-        let idToSelect = mockLayoutsService.layouts[1].id
+        let idToSelect = mockLayoutsService.levels[1].id
         let dispatchAction = LayoutEditActions.requestLoadLayout(payload: idToSelect)
         
         store.dispatch(action: dispatchAction)
@@ -44,7 +44,7 @@ struct LayoutEditEffectsTests {
         
         let expectedActions = [
             dispatchAction,
-            LayoutEditActions.layoutLoaded(payload: mockLayoutsService.layouts[1])
+            LayoutEditActions.layoutLoaded(payload: mockLayoutsService.levels[1])
         ] as [any Action]
 
         #expect(store.dispatchedActions.count == expectedActions.count)
@@ -63,7 +63,7 @@ struct LayoutEditEffectsTests {
         }
         
         #expect(store.state != nil)
-        #expect(store.state?.level == mockLayoutsService.layouts[1])
+        #expect(store.state?.level == mockLayoutsService.levels[1])
     }
     
     @Test

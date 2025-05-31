@@ -37,10 +37,12 @@ struct RootView: View {
                 // MARK: - Play Tab
                 NavigationStack {
                     VStack {
-                        TitleBarView(title: "Layouts", color: .cyan) {
-                            debugPrint("Test")
-                        }
-                        PlayLevelsListView()
+                        TitleBarView(
+                            title: "Levels",
+                            color: .cyan,
+                            addItemAction: { debugPrint("Test") },
+                            showSettingsAction: { store.dispatch(action: NavigationActions.showSettings()) }
+                        )
                     }
                 }
                 .tabItem { Label("Play", systemImage: "gamecontroller") }
@@ -49,10 +51,13 @@ struct RootView: View {
                 // MARK: - Edit Tab
                 NavigationStack(path: $navigationPath) {
                     VStack {
-                        TitleBarView(title: "Layouts", color: .cyan) {
-                            store.dispatch(action: NavigationActions.showSettings())
-                        }
-
+                        TitleBarView(
+                            title: "Layouts",
+                            color: .cyan,
+                            addItemAction: { store.dispatch(action: LayoutsActions.createNewLayout()) },
+                            showSettingsAction: { store.dispatch(action: NavigationActions.showSettings()) }
+                        )
+                        
                         LayoutsListView()
                             .navigationDestination(for: UUID.self) { id in
                                 VStack {
