@@ -3,7 +3,7 @@ import Fluxor
 
 //struct LevelListState<Level> /*Encodable, Equatable*/ {
 //    var levels: [Level] = [] // Concrete type instead of `any Level`
-struct LevelListState<L: Level>: Equatable {
+struct LevelListState<L: Level>: Equatable, Encodable {
     var levels: [L] = []
     var loading = false
     var error: String? = nil

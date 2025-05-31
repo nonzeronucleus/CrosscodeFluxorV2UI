@@ -14,8 +14,8 @@ public extension Container {
         store.register(reducer: appReducer)
         store.register(effects: AppEffects())
         
-        store.register(reducer: layoutsReducer, for: \.layouts)
-        store.register(effects: LayoutsEffects())
+//        store.register(reducer: layoutsReducer, for: \.layouts)
+//        store.register(effects: LayoutsEffects())
         
         store.register(reducer: navigationReducer, for: \.navigation)
         
@@ -27,28 +27,16 @@ public extension Container {
         
         let levelLayoutReducer: Reducer<LevelListState<LevelLayout>> = makeLevelListReducer()
         store.register(reducer: levelLayoutReducer, for: \.levelLayouts)
-        store.register(effects: LeveListEffects())
         
-//        let s = testFunc<LevelLayout>() //level:LevelLayout(id: UUID(), number: 1, crossword: Crossword(initString: "-|-|"), letterMap: nil))
-//                                
-//        debugPrint(s)
+        let levelLayoutEffects: LevelListEffects<LevelLayout> = LevelListEffects()
+        store.register(effects: levelLayoutEffects)
+        
+//        let playableLevelReducer: Reducer<LevelListState<PlayableLevel>> = makeLevelListReducer()
+//        store.register(reducer: playableLevelReducer, for: \.playableLevels)
+//        store.register(effects: LevelListEffects())
 
-//        let levelLayoutReducer = createLevelListReducer<LevelLayout>()
-//            .reduce(on: EditableLevelActions.customAction) { state, action in
-//                // EditableLevel-specific reductions
-//            }
-        
-//        store.register(reducer: levelListReducer, for: \.levelLayouts)
-        
-        
-        
-        
-        
-//        store.register(reducer: appReducer)
-//        store.register(effects: AppEffects(store: store) )
-        
 #if DEBUG
-        //    store.register(interceptor: PrintInterceptor())
+//        store.register(interceptor: PrintInterceptor())
         //    store.register(interceptor: FluxorExplorerInterceptor(displayName: UIDevice.current.name))
 #endif
         return store

@@ -1,11 +1,11 @@
 import Foundation
 
-enum NavTab: Equatable {
+enum NavTab: Equatable, Encodable {
     case play
     case edit
 }
 
-enum Route: Identifiable, Equatable {
+enum Route: Identifiable, Equatable, Encodable {
     case settings
     case layoutDetail(UUID)
 
@@ -26,7 +26,7 @@ enum Route: Identifiable, Equatable {
     }
 }
 
-struct NavigationState: Equatable {
+struct NavigationState: Equatable, Encodable {
     var selectedTab: NavTab = .edit
     var presentedRoute: Route? = nil
 }

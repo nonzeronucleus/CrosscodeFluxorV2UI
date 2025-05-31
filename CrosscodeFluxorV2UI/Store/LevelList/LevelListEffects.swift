@@ -4,7 +4,7 @@ import Foundation
 import Factory
 import CrosscodeDataLibrary
 
-class LeveListEffects: Effects {
+class LevelListEffects<L: Level>: Effects {
     typealias Environment = AppEnvironment
     
     let importLevels = Effect<Environment>.dispatchingOne { actions, environment in
@@ -14,7 +14,10 @@ class LeveListEffects: Effects {
                 Future<Action, Never> { promise in
                     Task {
                         do {
-                            try await environment.layoutsAPI.importLevels()
+//                            if L.Type.self == LevelLayout.self {
+//                                try await environment.layoutsAPI.importLevels()
+//                            }
+                            try await L.api.importLevels()
                             promise(.success(LevelListActions.Import.success()))
                         } catch {
                             promise(.success(LevelListActions.Import.failure(payload: error)))
@@ -71,7 +74,9 @@ class LeveListEffects: Effects {
                 Future<Action, Never> { promise in
                     Task {
                         do {
-                            let levels = try await environment.layoutsAPI.fetchAllLevels()
+//                            let levels = try await environment.layoutsAPI.fetchAllLevels()
+                            let levels = try await L.api.fetchAllLevels()
+
                             promise(.success(LevelListActions.FetchAll.success(payload: levels)))
                         } catch {
                             promise(.success(LevelListActions.FetchAll.failure(payload: error)))
@@ -94,7 +99,8 @@ class LeveListEffects: Effects {
                     Task {
                         do {
                             // 1. Attempt deletion in service layer
-                            let levels = try await environment.layoutsAPI.deleteLevel(id: layoutID)
+//                            let levels = try await environment.layoutsAPI.deleteLevel(id: layoutID)
+                            let levels = try await L.api.deleteLevel(id: layoutID)
                             // 2. On success, confirm deletion
                             promise(.success(LevelListActions.Delete.success(payload: levels)))
 //                            promise(.success(LevelListActions.fetchLevels()))

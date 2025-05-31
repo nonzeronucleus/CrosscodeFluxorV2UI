@@ -4,11 +4,10 @@
 import CrosscodeDataLibrary
 
 
-struct AppState /*: Encodable*/ {
+struct AppState: Encodable {
     var layouts = LayoutsState()
-//    var playableLevels = LevelListState<PlayableLevel>()
-//    var levelLayouts = LevelListState<LevelLayout>()
     var levelLayouts = LevelListState<LevelLayout>()
+    var playableLevels = LevelListState<PlayableLevel>()
     var navigation = NavigationState()
     var levelEdit: LayoutEditState?
     var settings = SettingsState()
