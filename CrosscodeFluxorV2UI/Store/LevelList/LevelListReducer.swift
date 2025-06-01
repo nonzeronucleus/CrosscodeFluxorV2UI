@@ -1,19 +1,54 @@
 import Fluxor
 import CrosscodeDataLibrary
 
+
+//func makeLevelListReducer<L: Level>() -> Reducer<LevelListState<L>> {
+//    return Reducer<LevelListState<L>>(
+//        // MARK: - Import Reducers
+//        ReduceOn(LevelListActions.Import.success) { state, _ in
+//            state.loading = false
+//            state.error = nil
+//        },
+//        
+//        ReduceOn(LevelListActions.Import.failure) { state, action in
+//            state.error = String(action.payload.localizedDescription)
+//            state.loading = false
+//        },
+//        
+//        // MARK: - FetchAll Reducers
+//        ReduceOn(LevelListActions.FetchAll.success) { state, action in
+//            // Safer type conversion
+//            if let levels = action.payload as? [L] {
+//                state.levels = levels
+//                state.loading = false
+//            } else {
+//                state.error = "Type mismatch in fetched levels"
+//                state.loading = false
+//            }
+//        },
+//        
+//        // MARK: - Common Error Handler
+//        ReduceOn(LevelListActions.FetchAll.failure) { state, action in
+//            state.error = action.payload.localizedDescription
+//            state.loading = false
+//        }
+//    )
+//}
+
+
 func makeLevelListReducer<L: Level>() -> Reducer<LevelListState<L>> {
     return Reducer<LevelListState<L>>(
-        ReduceOn(LevelListActions.Import.success) { state, _ in
+        ReduceOn(LevelListActions<L>.Import.success) { state, _ in
             state.loading = false
             state.error = nil
         },
-        ReduceOn(LevelListActions.Import.failure) { state, action in
+        ReduceOn(LevelListActions<L>.Import.failure) { state, action in
             state.error = String(action.payload.localizedDescription)
             state.loading = false
         },
         // MARK: - FetchAll Reducers
-        ReduceOn(LevelListActions.FetchAll.success) { state, action in
-            state.levels = action.payload as! [L]
+        ReduceOn(LevelListActions<L>.FetchAll.success) { state, action in
+            state.levels = action.payload
             state.loading = false
         },
 

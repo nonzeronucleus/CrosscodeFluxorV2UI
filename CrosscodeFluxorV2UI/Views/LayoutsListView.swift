@@ -45,7 +45,8 @@ struct LayoutsListView: View {
         }
         .onAppear() {
             store.dispatch(action: LayoutsActions.importLayouts())
-            store.dispatch(action: LevelListActions.FetchAll.start())
+            store.dispatch(action: LevelListActions<LevelLayout>.FetchAll.start())
+//            store.dispatch(action: LevelListActions<PlayableLevel>.FetchAll.start())
         }
     }
 }
