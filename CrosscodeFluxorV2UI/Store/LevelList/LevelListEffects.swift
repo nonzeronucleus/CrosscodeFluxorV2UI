@@ -71,9 +71,15 @@ class LevelListEffects<L: Level>: Effects {
                 Future<Action, Never> { promise in
                     Task {
                         do {
+                            let levels = try await L.api.fetchAllLevels()
+                            
+                            guard let levels = levels as? [L] else {
+                                fatalError("Could not convert \(levels) to [L]")
+                            }
+                            
 //                            let levels = try await environment.layoutsAPI.fetchAllLevels()
-                            let levels = try await L.api.fetchAllLevels() as? [L] ?? []
-
+//                            let levels = try await L.api.fetchAllLevels() as? [L] ?? []
+                            
 //                            promise(.success(LevelListActions.FetchAll.success(payload: levels)))
                             promise(.success(LevelListActions<L>.FetchAll.success(payload: levels)))
                         } catch {

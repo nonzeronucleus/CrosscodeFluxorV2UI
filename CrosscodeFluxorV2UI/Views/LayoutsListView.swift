@@ -44,7 +44,7 @@ struct LayoutsListView: View {
             Text("Are you sure you want to delete this layout?")
         }
         .onAppear() {
-            store.dispatch(action: LayoutsActions.importLayouts())
+//            store.dispatch(action: LayoutsActions.importLayouts())
             store.dispatch(action: LevelListActions<LevelLayout>.FetchAll.start())
 //            store.dispatch(action: LevelListActions<PlayableLevel>.FetchAll.start())
         }

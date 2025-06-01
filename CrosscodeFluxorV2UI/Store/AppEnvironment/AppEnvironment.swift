@@ -4,11 +4,13 @@ import CrosscodeDataLibrary
 
 struct AppEnvironment {
     let layoutsAPI:LayoutsAPI
+    let playableLevelsAPI:LevelsAPI
     let levelListReducerContainer = LevelListReducerContainer()
     
     
-    init(layoutsAPI:LayoutsAPI) {
+    init(layoutsAPI:LayoutsAPI, playableLevelsAPI:LevelsAPI) {
         self.layoutsAPI = layoutsAPI
+        self.playableLevelsAPI = playableLevelsAPI
     }
     
 //    func levelActions(for level:any Level) -> LevelListActions {

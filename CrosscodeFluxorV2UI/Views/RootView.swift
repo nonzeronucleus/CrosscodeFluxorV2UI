@@ -43,6 +43,16 @@ struct RootView: View {
                             addItemAction: { debugPrint("Test") },
                             showSettingsAction: { store.dispatch(action: NavigationActions.showSettings()) }
                         )
+                        
+                        PlayableLevelsListView()
+                            .navigationDestination(for: UUID.self) { id in
+                                VStack {
+                                    Text("\(id)")
+//                                    LayoutEditView(layoutID: id)
+//                                        .toolbar(.hidden, for: .tabBar)
+                                }
+                            }
+
                     }
                 }
                 .tabItem { Label("Play", systemImage: "gamecontroller") }

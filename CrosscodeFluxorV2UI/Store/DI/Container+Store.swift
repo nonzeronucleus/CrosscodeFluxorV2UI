@@ -10,7 +10,13 @@ public extension Container {
     }
     
     internal func createStore() -> Store<AppState, AppEnvironment> {
-        let store = Store(initialState: AppState(), environment: AppEnvironment(layoutsAPI: LayoutsAPIImpl()))
+        let store = Store(
+            initialState: AppState(),
+            environment: AppEnvironment(
+                layoutsAPI: LayoutsAPIImpl(),
+                playableLevelsAPI: PlayableLevelsAPIImpl(),
+            ))
+        
         store.register(reducer: appReducer)
         store.register(effects: AppEffects())
         
