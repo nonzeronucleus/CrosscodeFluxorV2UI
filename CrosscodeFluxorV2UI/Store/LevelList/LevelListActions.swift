@@ -58,6 +58,13 @@ struct LevelListActions<L: Level> {
         static var failure: ActionTemplate<Error> { action("Create/Failure", payload: Error.self) }
     }
     
+    enum Delete {
+        static var start: ActionTemplate<UUID> { action("Delete/Start", payload: UUID.self) }
+        static var success: ActionTemplate<[L]> { action("Delete/Success", payload: [L].self) }
+        static var failure: ActionTemplate<Error> { action("Delete/Failure", payload: Error.self) }
+    }
+
+    
     // Type-Specific Actions
     static func customAction() -> ActionTemplate<L> {
         action("CustomAction", payload: L.self)

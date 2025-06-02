@@ -42,24 +42,26 @@ class LevelListEffects<L: Level>: Effects {
 //    }
     
     
-//    let createNewLayout = Effect<Environment>.dispatchingOne { actions, environment in
-//        actions
-//            .wasCreated(from: LevelListActions.createNewLayout)
-//            .flatMap { _ -> AnyPublisher<Action, Never> in
-//                Future<Action, Never> { promise in
-//                    Task {
-//                        do {
-//                            let levels = try await environment.levelsAPI.addNewLayout()
-//                            promise(.success(LevelListActions.didCreateNewLayout(payload: levels)))
-//                        } catch {
-//                            promise(.success(LevelListActions.didFailFetchingLevels(payload: error.localizedDescription)))
-//                        }
-//                    }
-//                }
-//                .eraseToAnyPublisher()
-//            }
-//            .eraseToAnyPublisher()
-//    }
+    let createNewLayout = Effect<Environment>.dispatchingOne { actions, environment in
+        actions
+            .wasCreated(from: LevelListActions<L>.Create.start)
+            .flatMap { _ -> AnyPublisher<Action, Never> in
+                Future<Action, Never> { promise in
+                    Task {
+                        do {
+//                            let levels = try await L.api.fetchAllLevels() as! [L]
+                            let levels = try await L.api.addNewLevel() as! [L]
+
+                            promise(.success(LevelListActions<L>.Create.success(payload: levels)))
+                        } catch {
+                            promise(.success(LevelListActions<L>.Create.failure(payload: error)))
+                        }
+                    }
+                }
+                .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
 
 
     let fetchLevels = Effect<Environment>.dispatchingOne { actions, environment in

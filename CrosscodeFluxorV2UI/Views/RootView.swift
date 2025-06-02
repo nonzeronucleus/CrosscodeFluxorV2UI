@@ -1,6 +1,8 @@
 import Fluxor
 import SwiftUI
 import Factory
+import CrosscodeDataLibrary
+
 
 
 struct RootView: View {
@@ -64,7 +66,7 @@ struct RootView: View {
                         TitleBarView(
                             title: "Layouts",
                             color: .cyan,
-                            addItemAction: { store.dispatch(action: LayoutsActions.createNewLayout()) },
+                            addItemAction: { store.dispatch(action: LevelListActions<LevelLayout>.Create.start()) },
                             showSettingsAction: { store.dispatch(action: NavigationActions.showSettings()) }
                         )
                         
