@@ -3,11 +3,17 @@ import Fluxor
 import CrosscodeDataLibrary
 
 struct AppEnvironment {
-    let layoutsAPI:LayoutsAPI
-    let playableLevelsAPI:LevelsAPI
+    var layoutsAPI:LayoutsAPI { get {
+        apis[.layoutsAPI] as! LayoutsAPI
+    }}
+    
+    var PlayableLevelsAPI:LayoutsAPI { get {
+        apis[.playableLevelsAPI] as! LayoutsAPI
+    }}
+    var apis: [APIType: any LevelsAPI] = [:]
     
     init(layoutsAPI:LayoutsAPI, playableLevelsAPI:LevelsAPI) {
-        self.layoutsAPI = layoutsAPI
-        self.playableLevelsAPI = playableLevelsAPI
+        apis[.layoutsAPI] = layoutsAPI
+        apis[.playableLevelsAPI] = playableLevelsAPI
     }
 }

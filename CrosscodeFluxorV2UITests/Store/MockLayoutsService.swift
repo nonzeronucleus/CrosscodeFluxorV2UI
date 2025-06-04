@@ -2,8 +2,11 @@ import Factory
 import CrosscodeDataLibrary
 
 class MockLayoutsService: LayoutsAPI {
-
     
+    func printTest() {
+        print("MockLayoutsService")
+    }
+
     func importLevels() async throws {
         calledFunctions.append(#function)
         importCalled = true
@@ -41,7 +44,14 @@ class MockLayoutsService: LayoutsAPI {
         
     }
     
-    func addNewLayout() async throws -> [LevelLayout] {
+    func reset() {
+        levels.removeAll()
+        calledFunctions.removeAll()
+        levelToAdd = nil
+        populationResult = nil
+    }
+    
+    func addNewLevel() async throws -> [any Level] {
         @Injected(\.uuid) var uuid
         calledFunctions.append(#function)
         if let levelToAdd {
@@ -88,23 +98,23 @@ class MockLayoutsService: LayoutsAPI {
 
 
 extension MockLayoutsService {
-    public func importLayouts() async throws {
-        try await importLevels()
-    }
+//    public func importLayouts() async throws {
+//        try await importLevels()
+//    }
     
-    public func fetchLayout(id: UUID) async throws -> LevelLayout? {
+    public func fetchLayout(id: UUID) async throws -> (any Level)? {
         return try await fetchLevel(id: id) as? LevelLayout
     }
     
-    public func fetchAllLayouts() async throws -> [LevelLayout] {
+    public func fetchAllLayouts() async throws -> [any Level] {
         return try await fetchAllLevels() as? [LevelLayout] ?? []
     }
     
-    public func deleteLayout(id: UUID) async throws -> [LevelLayout] {
+    public func deleteLayout(id: UUID) async throws -> [any Level] {
         return try await deleteLevel(id: id) as? [LevelLayout] ?? []
     }
     
-    public func saveLayout(level: LevelLayout) async throws {
+    public func saveLayout(level: any Level) async throws {
         try await saveLevel(level: level)
     }
 }

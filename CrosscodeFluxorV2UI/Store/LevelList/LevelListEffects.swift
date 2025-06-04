@@ -14,7 +14,9 @@ class LevelListEffects<L: Level>: Effects {
                 Future<Action, Never> { promise in
                     Task {
                         do {
-                            try await L.api.importLevels()
+//                            try await L.getApi().importLevels()
+                            let api = environment.apis[L.getApi()]
+                            try await api?.importLevels()
                             promise(.success(LevelListActions<L>.Import.success()))
                         } catch {
                             promise(.success(LevelListActions<L>.Import.failure(payload: error)))
@@ -49,8 +51,10 @@ class LevelListEffects<L: Level>: Effects {
                 Future<Action, Never> { promise in
                     Task {
                         do {
-//                            let levels = try await L.api.fetchAllLevels() as! [L]
-                            let levels = try await L.api.addNewLevel() as! [L]
+//                            let levels = try await L.getApi().addNewLevel() as! [L]
+                            let api = environment.apis[L.getApi()]
+
+                            let levels = try await api?.addNewLevel() as! [L]
 
                             promise(.success(LevelListActions<L>.Create.success(payload: levels)))
                         } catch {
@@ -73,10 +77,12 @@ class LevelListEffects<L: Level>: Effects {
                 Future<Action, Never> { promise in
                     Task {
                         do {
-                            let levels = try await L.api.fetchAllLevels()
-                            
+//                            let levels = try await L.getApi().fetchAllLevels()
+                            let api = environment.apis[L.getApi()]
+                            let levels = try await api?.fetchAllLevels()
+
                             guard let levels = levels as? [L] else {
-                                fatalError("Could not convert \(levels) to [L]")
+                                fatalError("Could not convert \(String(describing: levels)) to [L]")
                             }
                             promise(.success(LevelListActions<L>.FetchAll.success(payload: levels)))
                         } catch {
@@ -99,7 +105,9 @@ class LevelListEffects<L: Level>: Effects {
                 return Future<Action, Never> { promise in
                     Task {
                         do {
-                            let levels = try await L.api.deleteLevel(id: layoutID) as! [L]
+//                            let levels = try await L.getApi().deleteLevel(id: layoutID) as! [L]
+                            let api = environment.apis[L.getApi()]
+                            let levels = try await api?.deleteLevel(id: layoutID) as! [L]
                             promise(.success(LevelListActions<L>.Delete.success(payload: levels)))
                         } catch {
                             promise(.success(LevelListActions<L>.Delete.failure(

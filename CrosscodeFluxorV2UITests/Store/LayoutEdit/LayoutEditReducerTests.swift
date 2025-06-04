@@ -12,10 +12,12 @@ struct LayoutEditEffectsTests {
     @Injected(\.uuid) var uuid
 
     init() {
-        initTestEnv()
+//        initTestEnv()
     }
 
     func setup(layout: LevelLayout? = nil) -> (MockStore<LayoutEditState?, AppEnvironment>, MockLayoutsService) {
+        Container.shared.layoutsAPI.register { MockLayoutsService() }
+        
         guard let layout else {
             return createTestStoreAndAPI(initialState:nil, reducers: [layoutEditReducer], effects: { store in LayoutEditEffects() })
         }

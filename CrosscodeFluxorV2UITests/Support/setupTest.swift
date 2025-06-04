@@ -19,7 +19,14 @@ func createTestStoreAndAPI<S: Equatable>(
     // Register dependencies
     // Create mock services
     let mockAPI = MockLayoutsService()
-    let environment = AppEnvironment(layoutsAPI: mockAPI)
+    
+    
+    Container.shared.layoutsAPI.register { mockAPI }
+    mockAPI.reset()
+
+
+
+    let environment = AppEnvironment(layoutsAPI: mockAPI, playableLevelsAPI: MockPlayaLevelsAPI())
     
     // Initialize store
     let store = MockStore(

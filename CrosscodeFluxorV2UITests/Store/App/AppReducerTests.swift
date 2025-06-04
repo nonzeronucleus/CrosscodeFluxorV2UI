@@ -20,7 +20,7 @@ struct AppReducerTests {
         
         let mockAPI = MockLayoutsService()
         
-        let environment = AppEnvironment(layoutsAPI: mockAPI)
+        let environment = AppEnvironment(layoutsAPI: mockAPI, playableLevelsAPI: MockPlayaLevelsAPI())
         let store = MockStore(
             initialState: AppState(),
             environment: environment,
@@ -32,5 +32,41 @@ struct AppReducerTests {
         
         return (store, mockAPI)
     }
+}
+
+class MockPlayaLevelsAPI: LevelsAPI {
+    func printTest() {
+        print("MockPlayaLevelsAPI")
+    }
+
+    func importLevels() async throws {
+        fatalError("\(#function) not implemented")
+    }
+    
+    func addNewLevel() async throws -> [any Level] {
+        fatalError("\(#function) not implemented")
+    }
+    
+    func fetchLevel(id: UUID) async throws -> (any Level)? {
+        fatalError("\(#function) not implemented")
+    }
+    
+    func fetchAllLevels() async throws -> [any Level] {
+        fatalError("\(#function) not implemented")
+    }
+    
+    func deleteLevel(id: UUID) async throws -> [any Level] {
+        fatalError("\(#function) not implemented")
+    }
+    
+    func saveLevel(level: any Level) async throws {
+        fatalError("\(#function) not implemented")
+    }
+    
+    func cancel() async {
+        fatalError("\(#function) not implemented")
+    }
+    
+    
 }
         

@@ -13,31 +13,42 @@ struct LayoutsEffectsTests {
         initTestEnv()
     }
     
-    func setup() -> (MockStore<LayoutsState, AppEnvironment>, MockLayoutsService) {
-       return createTestStoreAndAPI(initialState: LayoutsState(), reducers: [layoutsReducer], effects: { store in LayoutsEffects() })
+    func setup() -> (MockStore<LevelListState<LevelLayout>, AppEnvironment>, MockLayoutsService) {
+        let levelLayoutReducer: Reducer<LevelListState<LevelLayout>> = makeLevelListReducer()
+
+       return createTestStoreAndAPI(
+        initialState: LevelListState<LevelLayout>(),
+        reducers: [levelLayoutReducer],
+        effects: { store in LevelListEffects<LevelLayout>() })
     }
-    
+
     
     @Test
     func testImportFlow() async throws {
         // Given
         let (store, mockAPI) = setup()
+        print("***Setup***")
+
         
+        debugPrint("1 : \(mockAPI.calledFunctions.count)")
         // When
-        store.dispatch(action: LayoutsActions.importLayouts())
+        store.dispatch(action: LayoutsActions.Import.start())
         
         // Then
         let expectedActions = [
-            LayoutsActions.importLayouts(),
-            LayoutsActions.didImportLayouts(),
-            LayoutsActions.fetchLayouts(),
-            LayoutsActions.didFetchLayouts(payload: [])
+            LevelListActions<LevelLayout>.Import.start(),
+            LevelListActions<LevelLayout>.Import.success(),
+            LevelListActions<LevelLayout>.FetchAll.start(),
+            LevelListActions<LevelLayout>.FetchAll.success(payload: [])
         ] as [any Action]
         
         try await Task.sleep(for: .seconds(0.2))
         
         #expect(store.dispatchedActions.count == expectedActions.count)
         #expect(compareActions(store.dispatchedActions, expectedActions))
+        
+        debugPrint("2 : \(mockAPI.calledFunctions.count)")
+
         
         // Make sure all APIs have been called
         #expect(mockAPI.calledFunctions.count == 2)
@@ -54,21 +65,26 @@ struct LayoutsEffectsTests {
         let layoutToAdd = LevelLayout(id: uuid(), number: 1, gridText: "..|..|")
         mockAPI.levelToAdd = layoutToAdd
         
+        debugPrint("3 : \(mockAPI.calledFunctions.count)")
+
         // When
-        store.dispatch(action: LayoutsActions.createNewLayout())
+        store.dispatch(action: LayoutsActions.Create.start())
         
         try await Task.sleep(for: .seconds(0.2))
         
         // Then
         let expectedActions = [
-            LayoutsActions.createNewLayout(),
-            LayoutsActions.didCreateNewLayout(payload: [layoutToAdd])
+            LayoutsActions.Create.start(),
+            LayoutsActions.Create.success(payload: [layoutToAdd])
         ] as [any Action]
         
         #expect(store.dispatchedActions.count == expectedActions.count)
         #expect(compareActions(store.dispatchedActions, expectedActions))
         
+        
+        debugPrint("4 : \(mockAPI.calledFunctions.count)")
+
         #expect(mockAPI.calledFunctions.count == 1)
-        #expect(mockAPI.calledFunctions.contains("addNewLayout()"))
+        #expect(mockAPI.calledFunctions.contains("addNewLevel()"))
     }
 }
