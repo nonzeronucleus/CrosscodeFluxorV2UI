@@ -2,7 +2,6 @@ import Factory
 import CrosscodeDataLibrary
 
 class MockLayoutsService: LayoutsAPI {
-    
     func printTest() {
         print("MockLayoutsService")
     }
@@ -51,7 +50,7 @@ class MockLayoutsService: LayoutsAPI {
         populationResult = nil
     }
     
-    func addNewLevel() async throws -> [any Level] {
+    func addNewLayout() async throws -> [LevelLayout] {
         @Injected(\.uuid) var uuid
         calledFunctions.append(#function)
         if let levelToAdd {

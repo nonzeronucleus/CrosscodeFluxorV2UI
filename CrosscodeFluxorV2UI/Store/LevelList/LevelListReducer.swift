@@ -1,45 +1,10 @@
 import Fluxor
 import CrosscodeDataLibrary
 
-
-//func makeLevelListReducer<L: Level>() -> Reducer<LevelListState<L>> {
-//    return Reducer<LevelListState<L>>(
-//        // MARK: - Import Reducers
-//        ReduceOn(LevelListActions.Import.success) { state, _ in
-//            state.loading = false
-//            state.error = nil
-//        },
-//        
-//        ReduceOn(LevelListActions.Import.failure) { state, action in
-//            state.error = String(action.payload.localizedDescription)
-//            state.loading = false
-//        },
-//        
-//        // MARK: - FetchAll Reducers
-//        ReduceOn(LevelListActions.FetchAll.success) { state, action in
-//            // Safer type conversion
-//            if let levels = action.payload as? [L] {
-//                state.levels = levels
-//                state.loading = false
-//            } else {
-//                state.error = "Type mismatch in fetched levels"
-//                state.loading = false
-//            }
-//        },
-//        
-//        // MARK: - Common Error Handler
-//        ReduceOn(LevelListActions.FetchAll.failure) { state, action in
-//            state.error = action.payload.localizedDescription
-//            state.loading = false
-//        }
-//    )
-//}
-
-
 func makeLevelListReducer<L: Level>() -> Reducer<LevelListState<L>> {
     return Reducer<LevelListState<L>> { state, action in
         makeLevelListImportReducer().reduce(&state, action)
-        makeLevelListCreateReducer().reduce(&state, action)
+//        makeLevelListCreateReducer().reduce(&state, action)
         makeLevelListFetchAllReducer().reduce(&state, action)
         makeLevelListDeleteReducer().reduce(&state, action)
     }
@@ -60,18 +25,18 @@ func makeLevelListImportReducer<L: Level>() -> Reducer<LevelListState<L>> {
     )
 }
 
-func makeLevelListCreateReducer<L: Level>() -> Reducer<LevelListState<L>> {
-    return Reducer<LevelListState<L>>(
-        ReduceOn(LevelListActions<L>.Create.success) { state, action in
-            state.levels = action.payload
-            state.loading = false
-        },
-        ReduceOn(LevelListActions<L>.Create.failure) { state, action in
-            state.error = String(action.payload.localizedDescription)
-            state.loading = false
-        }
-    )
-}
+//func makeLevelListCreateReducer<L: Level>() -> Reducer<LevelListState<L>> {
+//    return Reducer<LevelListState<L>>(
+//        ReduceOn(LevelListActions<L>.Create.success) { state, action in
+//            state.levels = action.payload
+//            state.loading = false
+//        },
+//        ReduceOn(LevelListActions<L>.Create.failure) { state, action in
+//            state.error = String(action.payload.localizedDescription)
+//            state.loading = false
+//        }
+//    )
+//}
 
 
 func makeLevelListFetchAllReducer<L: Level>() -> Reducer<LevelListState<L>> {

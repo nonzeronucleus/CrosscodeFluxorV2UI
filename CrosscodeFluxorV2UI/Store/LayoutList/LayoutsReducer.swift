@@ -1,26 +1,15 @@
-//import Fluxor
-//
-//let layoutsReducer = Reducer<LayoutsState>(
-//    ReduceOn(LayoutsActions.fetchLayouts) { state, action in
-//        state.loadingLayouts = true
-//        state.error = nil
-//    },
-//    ReduceOn(LayoutsActions.didFetchLayouts) { state, action in
-//        state.layouts = action.payload
-//        state.loadingLayouts = false
-//        state.error = nil
-//    },
-//    ReduceOn(LayoutsActions.didCreateNewLayout) { state, action in
-//        state.layouts = action.payload
-//        state.loadingLayouts = false
-//        state.error = nil
-//    },
-//    ReduceOn(LayoutsActions.didDeleteLayout) { state, action in
-//        state.layouts = action.payload
-//        state.loadingLayouts = false
-//        state.error = nil
-//    },
-//    ReduceOn(LayoutsActions.importLayouts) { state, action in
-//        state.error = nil
-//    }
-//)
+import Fluxor
+import CrosscodeDataLibrary
+
+func makeLayoutCreateReducer() -> Reducer<LevelListState<LevelLayout>> {
+    return Reducer<LevelListState<LevelLayout>>(
+        ReduceOn(LayoutsActions.Create.success) { state, action in
+            state.levels = action.payload
+            state.loading = false
+        },
+        ReduceOn(LayoutsActions.Create.failure) { state, action in
+            state.error = String(action.payload.localizedDescription)
+            state.loading = false
+        }
+    )
+}

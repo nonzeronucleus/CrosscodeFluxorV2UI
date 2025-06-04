@@ -27,18 +27,23 @@ public extension Container {
         
         store.register(reducer: settingsReducer, for: \.settings)
         
+//        let levelLayoutReducer: Reducer<LevelListState<LevelLayout>> = makeLevelListReducer()
+        store.register(reducer: makeLevelListReducer(), for: \.levelLayouts)
+        store.register(reducer: makeLayoutCreateReducer(), for: \.levelLayouts)
         
-        let levelLayoutReducer: Reducer<LevelListState<LevelLayout>> = makeLevelListReducer()
-        store.register(reducer: levelLayoutReducer, for: \.levelLayouts)
         
-        let levelLayoutEffects: LevelListEffects<LevelLayout> = LevelListEffects()
-        store.register(effects: levelLayoutEffects)
+//        let levelLayoutEffects: LevelListEffects<LevelLayout> = LevelListEffects()
+        store.register(effects: BaseLayoutsEffects())
         
-        let playableLevelReducer: Reducer<LevelListState<PlayableLevel>> = makeLevelListReducer()
-        store.register(reducer: playableLevelReducer, for: \.playableLevels)
+        store.register(effects: LayoutsEffects())
+        
+        
+//        let playableLevelReducer: Reducer<LevelListState<PlayableLevel>> = makeLevelListReducer()
+        store.register(reducer: makeLevelListReducer(), for: \.playableLevels)
         
         let playableLevelEffects: LevelListEffects<PlayableLevel> = LevelListEffects()
         store.register(effects: playableLevelEffects)
+        
 
 #if DEBUG
 //        store.register(interceptor: PrintInterceptor())

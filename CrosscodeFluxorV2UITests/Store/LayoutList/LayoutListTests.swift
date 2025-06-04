@@ -15,13 +15,17 @@ struct LayoutsEffectsTests {
     
     func setup() -> (MockStore<LevelListState<LevelLayout>, AppEnvironment>, MockLayoutsService) {
         let levelLayoutReducer: Reducer<LevelListState<LevelLayout>> = makeLevelListReducer()
-
-       return createTestStoreAndAPI(
-        initialState: LevelListState<LevelLayout>(),
-        reducers: [levelLayoutReducer],
-        effects: { store in LevelListEffects<LevelLayout>() })
+        
+        let (store, mockAPI) = createTestStoreAndAPI(
+            initialState: LevelListState<LevelLayout>(),
+            reducers: [levelLayoutReducer, makeLayoutCreateReducer()]
+        )
+        
+        store.register(effects: LevelListEffects<LevelLayout>() )
+        store.register(effects: LayoutsEffects())
+        
+        return (store, mockAPI)
     }
-
     
     @Test
     func testImportFlow() async throws {
@@ -85,6 +89,6 @@ struct LayoutsEffectsTests {
         debugPrint("4 : \(mockAPI.calledFunctions.count)")
 
         #expect(mockAPI.calledFunctions.count == 1)
-        #expect(mockAPI.calledFunctions.contains("addNewLevel()"))
+        #expect(mockAPI.calledFunctions.contains("addNewLayout()"))
     }
 }

@@ -38,7 +38,7 @@ func createTestStoreAndAPI<S: Equatable>(
     return (store, mockAPI)
 }
 
-/// Creates a test store with effects
+///// Creates a test store with effects
 func createTestStoreAndAPI<S: Equatable, E: Effects>(
     initialState: @autoclosure () -> S,
     reducers: [Reducer<S>],
