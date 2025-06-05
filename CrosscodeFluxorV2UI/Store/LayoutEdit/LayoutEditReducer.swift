@@ -4,10 +4,10 @@ import CrosscodeDataLibrary
 
 
 let layoutEditReducer = Reducer<LayoutEditState?>(
-    ReduceOn(LayoutEditActions.layoutLoaded) { state, action in
+    ReduceOn(LayoutEditActions.Load.success) { state, action in
         state = LayoutEditState(level: action.payload)
     },
-    ReduceOn(LayoutEditActions.selectCell) { state, action in
+    ReduceOn(LayoutEditActions.Cell.select) { state, action in
         if state == nil { return }
         
         if state?.populationState != .unpopulated { return } // Don't allow the squares to be clicked while the grid's been populated
@@ -35,37 +35,37 @@ let layoutEditReducer = Reducer<LayoutEditState?>(
         state!.populationState = .unpopulated
         state!.saveState = .dirty
     },
-    ReduceOn(LayoutEditActions.requestPopulation) { state, action in
+    ReduceOn(LayoutEditActions.Populate.start) { state, action in
         if state == nil { return }
         state!.populationState = .populating
     },
-    ReduceOn(LayoutEditActions.populationComplete) { state, action in
+    ReduceOn(LayoutEditActions.Populate.success) { state, action in
         if state == nil { return }
         state!.level.crossword = action.payload.crossword
         state!.level.letterMap = action.payload.letterMap
         state!.populationState = .populated
         state!.saveState = .clean
     },
-    ReduceOn(LayoutEditActions.populationCancelled) { state, action in
+    ReduceOn(LayoutEditActions.CancelPopulation.success) { state, action in
         if state == nil { return }
         state!.populationState = .unpopulated
     },
-    ReduceOn(LayoutEditActions.depopulationComplete) { state, action in
+    ReduceOn(LayoutEditActions.Depopulate.success) { state, action in
         if state == nil { return }
         state!.level.crossword = action.payload.crossword
         state!.level.letterMap = action.payload.letterMap
         state!.populationState = .unpopulated
         state!.saveState = .clean
     },
-    ReduceOn(LayoutEditActions.saveLayout) { state, action in
+    ReduceOn(LayoutEditActions.SaveLayout.start) { state, action in
         if state == nil { return }
         state!.saveState = .saving
     },
-    ReduceOn(LayoutEditActions.saveLayoutSuccess) { state, action in
+    ReduceOn(LayoutEditActions.SaveLayout.success) { state, action in
         if state == nil { return }
         state!.saveState = .clean
     },
-    ReduceOn(LayoutEditActions.saveLayoutFailure) { state, action in
+    ReduceOn(LayoutEditActions.SaveLayout.failure) { state, action in
         state!.saveState = .dirty
         print("Save failed \(action.payload)")
     }

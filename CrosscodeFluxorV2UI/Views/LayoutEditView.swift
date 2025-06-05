@@ -45,7 +45,7 @@ struct LayoutEditView: View {
                                     .scaleEffect(2.5)
                                 
                                 Button("Cancel") {
-                                    store.dispatch(action: LayoutEditActions.requestCancelPopulation(payload: selectedLayout.crossword))
+                                    store.dispatch(action: LayoutEditActions.CancelPopulation.start(payload: selectedLayout.crossword))
                                 }
                             }
                         )
@@ -58,7 +58,7 @@ struct LayoutEditView: View {
             }
         }
         .onAppear {
-            store.dispatch(action: LayoutEditActions.requestLoadLayout(payload: self.layoutID))
+            store.dispatch(action: LayoutEditActions.Load.start(payload: self.layoutID))
         }
     }
     
@@ -77,7 +77,7 @@ struct LayoutEditView: View {
 //                    checking: checking,
 //                    editMode: !isPopulated
                 ) { id in
-                    store.dispatch(action: LayoutEditActions.selectCell(payload: id))
+                    store.dispatch(action: LayoutEditActions.Cell.select(payload: id))
 //                    store.send(.cellSelected(id))
                 }
                 .frame(
@@ -120,7 +120,7 @@ struct LayoutEditView: View {
         HStack(spacing: Layout.buttonSpacing) {
             
             if isPopulated {
-                Button(action: { store.dispatch(action: LayoutEditActions.requestPopulation(payload: selectedLayout!.crossword) ) }) {
+                Button(action: { store.dispatch(action: LayoutEditActions.Populate.start(payload: selectedLayout!.crossword) ) }) {
                     Text("Export")
                         .font(.system(size: Layout.buttonFontSize(), weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -129,7 +129,7 @@ struct LayoutEditView: View {
                 .buttonStyle(.borderedProminent)
                 .tint(.green)
 
-                Button(action: { store.dispatch(action: LayoutEditActions.depopulateGrid(payload: selectedLayout!.crossword) ) }) {
+                Button(action: { store.dispatch(action: LayoutEditActions.Depopulate.start(payload: selectedLayout!.crossword) ) }) {
                     Text("Clear")
                         .font(.system(size: Layout.buttonFontSize(), weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -140,7 +140,7 @@ struct LayoutEditView: View {
 
             }
             else {
-                Button(action: { store.dispatch(action: LayoutEditActions.requestPopulation(payload: selectedLayout!.crossword) ) }) {
+                Button(action: { store.dispatch(action: LayoutEditActions.Populate.start(payload: selectedLayout!.crossword) ) }) {
                     Text("Populate")
                         .font(.system(size: Layout.buttonFontSize(), weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: .infinity)

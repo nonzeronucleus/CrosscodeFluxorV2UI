@@ -31,10 +31,6 @@ struct LayoutsEffectsTests {
     func testImportFlow() async throws {
         // Given
         let (store, mockAPI) = setup()
-        print("***Setup***")
-
-        
-        debugPrint("1 : \(mockAPI.calledFunctions.count)")
         // When
         store.dispatch(action: LayoutsActions.Import.start())
         
@@ -51,9 +47,6 @@ struct LayoutsEffectsTests {
         #expect(store.dispatchedActions.count == expectedActions.count)
         #expect(compareActions(store.dispatchedActions, expectedActions))
         
-        debugPrint("2 : \(mockAPI.calledFunctions.count)")
-
-        
         // Make sure all APIs have been called
         #expect(mockAPI.calledFunctions.count == 2)
         #expect(mockAPI.calledFunctions.contains("importLevels()"))
@@ -69,8 +62,6 @@ struct LayoutsEffectsTests {
         let layoutToAdd = LevelLayout(id: uuid(), number: 1, gridText: "..|..|")
         mockAPI.levelToAdd = layoutToAdd
         
-        debugPrint("3 : \(mockAPI.calledFunctions.count)")
-
         // When
         store.dispatch(action: LayoutsActions.Create.start())
         
@@ -86,8 +77,6 @@ struct LayoutsEffectsTests {
         #expect(compareActions(store.dispatchedActions, expectedActions))
         
         
-        debugPrint("4 : \(mockAPI.calledFunctions.count)")
-
         #expect(mockAPI.calledFunctions.count == 1)
         #expect(mockAPI.calledFunctions.contains("addNewLayout()"))
     }

@@ -5,29 +5,37 @@ import CrosscodeDataLibrary
 typealias PopulationPayload = (crossword: Crossword, letterMap: CharacterIntMap?)
 
 enum LayoutEditActions {
-//    static let selectLevel = ActionTemplate(id: "[Editing] Selected level",
-//                                            payloadType: LevelLayout.self,
-//    )
-    static let requestLoadLayout = ActionTemplate(id: "[Editing] Load level", payloadType: UUID.self)
-    static let layoutLoaded = ActionTemplate(id: "[Editing] Layout loaded", payloadType: LevelLayout.self)
-    static let layoutLoadingFailed = ActionTemplate(id: "[Editing] Layout loading failed", payloadType: String.self)
+    enum Load: ActionNamespace {
+        static var start = action("Start", payload: UUID.self)
+        static var success = action("Success", payload: LevelLayout.self)
+        static var failure = action("Faiure", payload: Error.self)
+    }
     
-    
-    
-    static let selectCell = ActionTemplate(id: "[Editing] Selected cell", payloadType: UUID?.self)
-    static let requestCancelPopulation = ActionTemplate(id: "[Editing] Request to cancel", payloadType: Crossword.self)
-    static let requestPopulation = ActionTemplate(id: "[Editing] Request to populate level", payloadType: Crossword.self)
-    static let populationComplete = ActionTemplate(id: "[Editing] Population complete", payloadType: PopulationPayload.self)
-    static let populationCancelled = ActionTemplate(id: "[Editing] Population cancelled")
-    static let populationFailed = ActionTemplate(id: "[Editing] Population failed", payloadType: String.self)
-    static let depopulateGrid = ActionTemplate(id: "[Editing] Deopulate grid", payloadType: Crossword.self)
-    static let depopulationComplete = ActionTemplate(id: "[Editing] Depopulation complete", payloadType: PopulationPayload.self)
+    enum Cell: ActionNamespace {
+        static var select = action("Select", payload: UUID?.self)
+    }
 
-    // Save layout
-    static let saveLayout = ActionTemplate(id: "[Editing] Save Level", payloadType: LevelLayout.self)
-    static let saveLayoutSuccess = ActionTemplate(id: "[Editing] Save success")
-    static let saveLayoutFailure = ActionTemplate(id: "[Editing] Save failure", payloadType: String.self)
+    enum Populate: ActionNamespace {
+        static var start = action("Start", payload: Crossword.self)
+        static var success = action("Success", payload: PopulationPayload.self)
+        static var failure = action("Failure", payload: Error.self)
+    }
     
-    // Export populated level
+    enum CancelPopulation: ActionNamespace {
+        static var start = action("Cancel", payload: Crossword.self)
+        static var success = action("Success")
+    }
+    
+    enum Depopulate: ActionNamespace {
+        static var start = action("Cancel", payload: Crossword.self)
+        static var success = action("Success", payload: PopulationPayload.self)
+    }
+    
+    enum SaveLayout: ActionNamespace {
+        static var start = action("Cancel", payload: LevelLayout.self)
+        static var success = action("Success")
+        static var failure = action("Failure", payload: Error.self)
+
+    }
 }
 

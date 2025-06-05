@@ -42,7 +42,7 @@ struct RootView: View {
                         TitleBarView(
                             title: "Levels",
                             color: .cyan,
-                            addItemAction: { debugPrint("Test") },
+                            addItemAction: nil,
                             showSettingsAction: { store.dispatch(action: NavigationActions.showSettings()) }
                         )
                         

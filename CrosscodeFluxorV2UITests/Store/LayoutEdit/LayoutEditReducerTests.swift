@@ -36,7 +36,7 @@ struct LayoutEditEffectsTests {
 
         // When requestiong load for an existing level
         let idToSelect = mockLayoutsService.levels[1].id
-        let dispatchAction = LayoutEditActions.requestLoadLayout(payload: idToSelect)
+        let dispatchAction = LayoutEditActions.Load.start(payload: idToSelect)
         
         store.dispatch(action: dispatchAction)
         try await Task.sleep(for: .seconds(0.2))
@@ -46,7 +46,7 @@ struct LayoutEditEffectsTests {
         
         let expectedActions = [
             dispatchAction,
-            LayoutEditActions.layoutLoaded(payload: mockLayoutsService.levels[1])
+            LayoutEditActions.Load.success(payload: mockLayoutsService.levels[1])
         ] as [any Action]
 
         #expect(store.dispatchedActions.count == expectedActions.count)
@@ -83,7 +83,7 @@ struct LayoutEditEffectsTests {
         #expect(store.state?.level.crossword[2,2].letter == nil)
 
         //Select top left cell
-        store.dispatch(action: LayoutEditActions.selectCell(payload:cell_0_0_id))
+        store.dispatch(action: LayoutEditActions.Cell.select(payload:cell_0_0_id))
         
         try await Task.sleep(for: .seconds(0.2))
 
@@ -92,7 +92,7 @@ struct LayoutEditEffectsTests {
         #expect(store.state?.level.crossword[1,1].letter == nil)
         #expect(store.state?.level.crossword[2,2].letter == " ")
         
-        store.dispatch(action: LayoutEditActions.selectCell(payload:cell_0_0_id))
+        store.dispatch(action: LayoutEditActions.Cell.select(payload:cell_0_0_id))
         
         // Top left and bottom right should toggle back off.
         #expect(store.state?.level.crossword[0,0].letter == nil)
@@ -113,14 +113,14 @@ struct LayoutEditEffectsTests {
         mockAPI.populationResult = populationResult
 
         // When populating the grid
-        store.dispatch(action: LayoutEditActions.requestPopulation(payload: store.state!.level.crossword))
+        store.dispatch(action: LayoutEditActions.Populate.start(payload: store.state!.level.crossword))
         try await Task.sleep(for: .seconds(0.2))
         
         
         // Then
         let expectedActions = [
-            LayoutEditActions.requestPopulation(payload: store.state!.level.crossword),
-            LayoutEditActions.populationComplete(payload:PopulationPayload(crossword:Crossword(initString: populatedCrosswordText), letterMap:CharacterIntMap(from: populatedLetterMapText)))
+            LayoutEditActions.Populate.start(payload: store.state!.level.crossword),
+            LayoutEditActions.Populate.success(payload:PopulationPayload(crossword:Crossword(initString: populatedCrosswordText), letterMap:CharacterIntMap(from: populatedLetterMapText)))
         ] as [any Action]
         
         try await Task.sleep(for: .seconds(0.2))
