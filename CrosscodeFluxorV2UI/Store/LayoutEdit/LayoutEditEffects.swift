@@ -3,15 +3,7 @@ import CrosscodeDataLibrary
 import Fluxor
 import Foundation
 
-struct SimpleError: LocalizedError {
-    let message: String
-    
-    init(_ message:String) {
-        self.message = message
-    }
-    
-    var errorDescription: String? { message }
-}
+
 
 
 class LayoutEditEffects: Effects {
@@ -168,8 +160,33 @@ class LayoutEditEffects: Effects {
             .eraseToAnyPublisher()
     }
     
-    var effects: [Effect<Environment>] {
-        [populateLevel, cancelPopulation]
+    
+    let exportPopulatedLevel = Effect<Environment>.dispatchingMultiple { actions, environment in
+        actions
+            .wasCreated(from: LayoutEditActions.ExportPopulatedLevel.start)
+            .flatMap { action in
+                Future<[Action], Never> { promise in
+                    Task {
+                        do {
+                            let populatedLevel = action.payload
+                            let api = environment.playableLevelsAPI
+                            try await api.addNewLevel(layout: populatedLevel)
+                        } catch {
+                            promise(.success([
+                                LayoutEditActions.ExportPopulatedLevel.failure(
+                                    payload: error)
+                            ]))
+                        }
+                    }
+                }
+                .handleEvents(receiveCancel: {
+                    Task {
+                        await environment.layoutsAPI.cancel()
+                    }
+                })
+                .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
     }
 }
 

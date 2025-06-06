@@ -12,7 +12,7 @@ class LayoutsEffects: Effects {
 
     let createNewLayout = Effect<Environment>.dispatchingOne { actions, environment in
         actions
-            .wasCreated(from: LayoutsActions.Create.start)
+            .wasCreated(from: LayoutsActions.CreateLayout.start)
             .flatMap { _ -> AnyPublisher<Action, Never> in
                 Future<Action, Never> { promise in
                     Task {
@@ -21,9 +21,9 @@ class LayoutsEffects: Effects {
                             
                             let levels = try await api.addNewLayout()
                             
-                            promise(.success(LayoutsActions.Create.success(payload: levels)))
+                            promise(.success(LayoutsActions.CreateLayout.success(payload: levels)))
                         } catch {
-                            promise(.success(LayoutsActions.Create.failure(payload: error)))
+                            promise(.success(LayoutsActions.CreateLayout.failure(payload: error)))
                         }
                     }
                 }

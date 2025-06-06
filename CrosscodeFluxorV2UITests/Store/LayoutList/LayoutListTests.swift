@@ -63,14 +63,14 @@ struct LayoutsEffectsTests {
         mockAPI.levelToAdd = layoutToAdd
         
         // When
-        store.dispatch(action: LayoutsActions.Create.start())
+        store.dispatch(action: LayoutsActions.CreateLayout.start())
         
         try await Task.sleep(for: .seconds(0.2))
         
         // Then
         let expectedActions = [
-            LayoutsActions.Create.start(),
-            LayoutsActions.Create.success(payload: [layoutToAdd])
+            LayoutsActions.CreateLayout.start(),
+            LayoutsActions.CreateLayout.success(payload: [layoutToAdd])
         ] as [any Action]
         
         #expect(store.dispatchedActions.count == expectedActions.count)

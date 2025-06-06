@@ -14,7 +14,7 @@ enum LayoutEditActions {
     enum Cell: ActionNamespace {
         static var select = action("Select", payload: UUID?.self)
     }
-
+    
     enum Populate: ActionNamespace {
         static var start = action("Start", payload: Crossword.self)
         static var success = action("Success", payload: PopulationPayload.self)
@@ -35,7 +35,13 @@ enum LayoutEditActions {
         static var start = action("Cancel", payload: LevelLayout.self)
         static var success = action("Success")
         static var failure = action("Failure", payload: Error.self)
-
+        
+    }
+    
+    enum ExportPopulatedLevel: ActionNamespace {
+        static var start = action("Cancel", payload: LevelLayout.self)
+        static var success = action("Success")
+        static var failure = action("Failure", payload: Error.self)
     }
 }
 

@@ -35,6 +35,7 @@ class LevelListEffects<L: Level>: Effects {
             .flatMap { _ -> AnyPublisher<Action, Never> in
                 Future<Action, Never> { promise in
                     Task {
+                        debugPrint(">>> importedLevelsSuccess")
                         promise(.success(LevelListActions<L>.FetchAll.start()))
                     }
                 }
@@ -42,30 +43,6 @@ class LevelListEffects<L: Level>: Effects {
             }
             .eraseToAnyPublisher()
     }
-    
-    
-//    let createNewLayout = Effect<Environment>.dispatchingOne { actions, environment in
-//        actions
-//            .wasCreated(from: LevelListActions<L>.Create.start)
-//            .flatMap { _ -> AnyPublisher<Action, Never> in
-//                Future<Action, Never> { promise in
-//                    Task {
-//                        do {
-////                            let levels = try await L.getApi().addNewLevel() as! [L]
-//                            let api = environment.apis[L.getApi()]
-//
-//                            let levels = try await api?.addNewLevel() as! [L]
-//
-//                            promise(.success(LevelListActions<L>.Create.success(payload: levels)))
-//                        } catch {
-//                            promise(.success(LevelListActions<L>.Create.failure(payload: error)))
-//                        }
-//                    }
-//                }
-//                .eraseToAnyPublisher()
-//            }
-//            .eraseToAnyPublisher()
-//    }
 
 
     let fetchLevels = Effect<Environment>.dispatchingOne { actions, environment in
@@ -77,8 +54,9 @@ class LevelListEffects<L: Level>: Effects {
                 Future<Action, Never> { promise in
                     Task {
                         do {
-//                            let levels = try await L.getApi().fetchAllLevels()
                             let api = environment.apis[L.getApi()]
+                            debugPrint(">>> fetchLevels for \(L.self)")
+
                             let levels = try await api?.fetchAllLevels()
 
                             guard let levels = levels as? [L] else {

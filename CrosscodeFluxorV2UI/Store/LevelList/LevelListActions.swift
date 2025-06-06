@@ -14,33 +14,9 @@ extension LevelActionNamespace {
     }
 }
 
-//struct LevelListActions<L: Level> {
-//    enum Import: LevelActionNamespace {
-//        typealias LevelType = L
-//        static var start: ActionTemplate<Void> { action("Start", payload: Void.self) }
-//        static var success: ActionTemplate<Void> { action("Success", payload: Void.self) }
-//    }
-//}
-//
 
 struct LevelListActions<L: Level> {
     typealias LevelType = L
-    
-//    static func action(_ id: String) -> ActionTemplate<Void> {
-//        ActionTemplate(id: "\(L.self)/\(id)")
-//    }
-//    
-//    static func action<P>(_ id: String, payload: P.Type = Void.self) -> ActionTemplate<P> {
-//        ActionTemplate(id: "\(L.self)/\(id)", payloadType: P.self)
-//    }
-    
-    // Common Actions
-//    enum Import {
-////        static var start: ActionTemplate<Void> { LevelListActions.action("Import/Start") }
-////        static var start: ActionTemplate<Void> { action("Import/Start") }
-//        static var success: ActionTemplate<Void> { action("Import/Success") }
-//        static var failure: ActionTemplate<Error> { action("Import/Failure", payload: Error.self) }
-//    }
     
     enum Import: LevelActionNamespace {
         typealias LevelType = L
@@ -55,7 +31,9 @@ struct LevelListActions<L: Level> {
         typealias LevelType = L
 
         static var start: ActionTemplate<Void> { action("FetchAll/Start") }
-        static var success: ActionTemplate<[L]> { action("Import/Success", payload: [L].self) }
+        static var success: ActionTemplate<[L]> {
+            return action("Import/Success", payload: [L].self)
+        }
         static var failure: ActionTemplate<Error> { action("Import/Failure", payload: Error.self) }
     }
 
@@ -68,9 +46,4 @@ struct LevelListActions<L: Level> {
         static var failure: ActionTemplate<Error> { action("Delete/Failure", payload: Error.self) }
     }
 
-    
-//    // Type-Specific Actions
-//    static func customAction() -> ActionTemplate<L> {
-//        action("CustomAction", payload: L.self)
-//    }
 }

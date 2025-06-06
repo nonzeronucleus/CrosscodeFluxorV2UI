@@ -7,7 +7,7 @@ struct AppEnvironment {
         apis[.layoutsAPI] as! LayoutsAPI
     }}
     
-    var PlayableLevelsAPI:LevelsAPI { get {
+    var playableLevelsAPI:PlayableLevelsAPI { get {
         apis[.playableLevelsAPI] as! PlayableLevelsAPI
     }}
     var apis: [APIType: any LevelsAPI] = [:]

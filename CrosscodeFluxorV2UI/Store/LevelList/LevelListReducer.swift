@@ -42,6 +42,7 @@ func makeLevelListImportReducer<L: Level>() -> Reducer<LevelListState<L>> {
 func makeLevelListFetchAllReducer<L: Level>() -> Reducer<LevelListState<L>> {
     return Reducer<LevelListState<L>>(
         ReduceOn(LevelListActions<L>.FetchAll.success) { state, action in
+            print("Loaded \(action.payload.count) levels")
             state.levels = action.payload
             state.loading = false
         },

@@ -120,7 +120,7 @@ struct LayoutEditView: View {
         HStack(spacing: Layout.buttonSpacing) {
             
             if isPopulated {
-                Button(action: { store.dispatch(action: LayoutEditActions.Populate.start(payload: selectedLayout!.crossword) ) }) {
+                Button(action: { store.dispatch(action: LayoutEditActions.ExportPopulatedLevel.start(payload: selectedLayout!) ) }) {
                     Text("Export")
                         .font(.system(size: Layout.buttonFontSize(), weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: .infinity)

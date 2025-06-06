@@ -66,7 +66,7 @@ struct RootView: View {
                         TitleBarView(
                             title: "Layouts",
                             color: .cyan,
-                            addItemAction: { store.dispatch(action: LevelListActions<LevelLayout>.Create.start()) },
+                            addItemAction: { store.dispatch(action: LevelListActions<LevelLayout>.CreateLayout.start()) },
                             showSettingsAction: { store.dispatch(action: NavigationActions.showSettings()) }
                         )
                         
