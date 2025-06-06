@@ -35,7 +35,6 @@ class LevelListEffects<L: Level>: Effects {
             .flatMap { _ -> AnyPublisher<Action, Never> in
                 Future<Action, Never> { promise in
                     Task {
-                        debugPrint(">>> importedLevelsSuccess")
                         promise(.success(LevelListActions<L>.FetchAll.start()))
                     }
                 }
@@ -55,7 +54,6 @@ class LevelListEffects<L: Level>: Effects {
                     Task {
                         do {
                             let api = environment.apis[L.getApi()]
-                            debugPrint(">>> fetchLevels for \(L.self)")
 
                             let levels = try await api?.fetchAllLevels()
 
